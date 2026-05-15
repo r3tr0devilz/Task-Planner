@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Task Planner — Sign in</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#0b0b11;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+  padding:20px;
+  color:#e2e2ee;
+}
+.card{
+  background:#15151e;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:20px;
+  padding:38px 34px;
+  width:100%;
+  max-width:390px;
+  box-shadow:0 16px 60px rgba(0,0,0,.55);
+}
+.logo{font-size:26px;font-weight:800;margin-bottom:4px;letter-spacing:-.4px;}
+.logo-sub{font-size:13px;color:#6e6e98;margin-bottom:30px;line-height:1.5;}
+.tabs{
+  display:flex;
+  background:#0b0b11;
+  border-radius:11px;
+  padding:3px;
+  margin-bottom:26px;
+  border:1px solid rgba(255,255,255,.06);
+  gap:3px;
+}
+.tab{
+  flex:1;padding:9px 8px;border:none;background:none;
+  color:#6e6e98;font-size:13px;font-weight:600;cursor:pointer;
+  border-radius:9px;font-family:inherit;transition:all .15s;
+}
+.tab.active{background:#4a8fff;color:#fff;}
+.field{margin-bottom:16px;}
+.field label{
+  display:block;font-size:11px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.07em;
+  color:#6e6e98;margin-bottom:6px;
+}
+.field input{
+  width:100%;padding:11px 14px;border-radius:10px;
+  border:1.5px solid rgba(255,255,255,.08);
+  background:#0b0b11;color:#e2e2ee;
+  font-size:14px;font-family:inherit;outline:none;
+  transition:border-color .15s;
+}
+.field input:focus{border-color:#4a8fff;}
+.pass-wrap{position:relative;}
+.pass-wrap input{padding-right:62px;}
+.pass-eye{
+  position:absolute;right:0;top:0;bottom:0;
+  border:none;background:none;color:#6e6e98;
+  cursor:pointer;font-size:12px;font-family:inherit;
+  padding:0 14px;font-weight:600;letter-spacing:.02em;
+}
+.pass-eye:hover{color:#e2e2ee;}
+#msg-error{
+  font-size:12px;color:#ff6e6e;
+  min-height:16px;margin-bottom:14px;line-height:1.5;
+}
+#msg-success{
+  font-size:12px;color:#4cba80;
+  margin-bottom:14px;line-height:1.6;display:none;
+  background:rgba(76,186,128,.1);padding:10px 12px;
+  border-radius:8px;border:1px solid rgba(76,186,128,.25);
+}
+.btn{
+  width:100%;padding:13px;border-radius:10px;border:none;
+  font-size:14px;font-weight:700;cursor:pointer;
+  font-family:inherit;transition:opacity .15s;letter-spacing:.01em;
+}
+.btn:disabled{opacity:.55;cursor:not-allowed;}
+.btn-primary{background:#4a8fff;color:#fff;}
+.btn-primary:hover:not(:disabled){opacity:.88;}
+.divider{text-align:center;margin-top:16px;}
+.link-btn{
+  border:none;background:none;color:#4a8fff;cursor:pointer;
+  font-size:13px;font-family:inherit;padding:0;
+  text-decoration:underline;text-underline-offset:3px;opacity:.9;
+}
+.link-btn:hover{opacity:1;}
+.back-link{margin-top:16px;text-align:center;}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">&#x1F4CB; Task Planner</div>
+  <div class="logo-sub" id="card-sub">Sign in to your account</div>
+
+  <div class="tabs" id="auth-tabs">
+    <button class="tab active" id="tab-signin" onclick="setMode('signin')">Sign in</button>
+    <button class="tab" id="tab-signup" onclick="setMode('signup')">Sign up</button>
+  </div>
+
+  <div class="field" id="field-email">
+    <label>Email</label>
+    <input id="email" type="email" placeholder="you@example.com" autocomplete="email"
+      onkeydown="if(event.key==='Enter'&&_mode!=='forgot')document.getElementById('pass').focus();">
+  </div>
+
+  <div class="field" id="field-pass">
+    <label id="pass-label">Password</label>
+    <div class="pass-wrap">
+      <input id="pass" type="password" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;" autocomplete="current-password"
+        onkeydown="if(event.key==='Enter')handleSubmit();">
+      <button type="button" class="pass-eye" id="pass-eye" onclick="togglePassVis()">Show</button>
+    </div>
+  </div>
+
+  <div id="msg-error"></div>
+  <div id="msg-success"></div>
+
+  <button class="btn btn-primary" id="submit-btn" onclick="handleSubmit()">Sign in</button>
+
+  <div class="divider" id="forgot-wrap">
+    <button class="link-btn" onclick="setMode('forgot')">Forgot password?</button>
+  </div>
+
+  <div class="back-link" id="back-wrap" style="display:none;">
+    <button class="link-btn" onclick="setMode('signin')">&#x2190; Back to sign in</button>
+  </div>
+</div>
+
+<script>
+var _mode = 'signin';
+var _sbUrl = '';
+var _sbAnonKey = '';
+var _resetToken = '';
+
+async function loadConfig() {
+  try {
+    var r = await fetch('/.netlify/functions/config');
+    if (!r.ok) return;
+    var d = await r.json();
+    _sbUrl = d.supabaseUrl || '';
+    _sbAnonKey = d.supabaseAnonKey || '';
+  } catch(e) {}
+}
+
+function setMode(mode) {
+  _mode = mode;
+  clearMsg();
+  document.getElementById('msg-success').style.display = 'none';
+  document.getElementById('submit-btn').style.display = '';
+  document.getElementById('submit-btn').disabled = false;
+
+  var show = function(id){ document.getElementById(id).style.display = ''; };
+  var hide = function(id){ document.getElementById(id).style.display = 'none'; };
+
+  if (mode === 'signin') {
+    show('auth-tabs'); show('field-email'); show('field-pass'); show('forgot-wrap'); hide('back-wrap');
+    document.getElementById('tab-signin').classList.add('active');
+    document.getElementById('tab-signup').classList.remove('active');
+    document.getElementById('card-sub').textContent = 'Sign in to your account';
+    document.getElementById('pass-label').textContent = 'Password';
+    document.getElementById('submit-btn').textContent = 'Sign in';
+    document.getElementById('pass').setAttribute('autocomplete', 'current-password');
+    setTimeout(function(){ document.getElementById('email').focus(); }, 50);
+
+  } else if (mode === 'signup') {
+    show('auth-tabs'); show('field-email'); show('field-pass'); hide('forgot-wrap'); hide('back-wrap');
+    document.getElementById('tab-signup').classList.add('active');
+    document.getElementById('tab-signin').classList.remove('active');
+    document.getElementById('card-sub').textContent = 'Create a new account';
+    document.getElementById('pass-label').textContent = 'Password';
+    document.getElementById('submit-btn').textContent = 'Create account';
+    document.getElementById('pass').setAttribute('autocomplete', 'new-password');
+    setTimeout(function(){ document.getElementById('email').focus(); }, 50);
+
+  } else if (mode === 'forgot') {
+    hide('auth-tabs'); show('field-email'); hide('field-pass'); hide('forgot-wrap'); show('back-wrap');
+    document.getElementById('card-sub').textContent = 'Reset your password';
+    document.getElementById('submit-btn').textContent = 'Send reset link';
+    setTimeout(function(){ document.getElementById('email').focus(); }, 50);
+
+  } else if (mode === 'check-email') {
+    hide('auth-tabs'); hide('field-email'); hide('field-pass'); hide('forgot-wrap'); show('back-wrap');
+    hide('submit-btn');
+    document.getElementById('card-sub').textContent = 'Check your email';
+    document.getElementById('msg-success').style.display = '';
+    document.getElementById('msg-success').textContent = 'We sent a password reset link to your inbox. Click it to set a new password.';
+
+  } else if (mode === 'reset') {
+    hide('auth-tabs'); hide('field-email'); show('field-pass'); hide('forgot-wrap'); show('back-wrap');
+    document.getElementById('card-sub').textContent = 'Set a new password';
+    document.getElementById('pass-label').textContent = 'New password';
+    document.getElementById('submit-btn').textContent = 'Set new password';
+    document.getElementById('pass').setAttribute('autocomplete', 'new-password');
+    document.getElementById('pass').value = '';
+    setTimeout(function(){ document.getElementById('pass').focus(); }, 50);
+  }
+}
+
+function togglePassVis() {
+  var inp = document.getElementById('pass');
+  var btn = document.getElementById('pass-eye');
+  var showing = inp.type === 'text';
+  inp.type = showing ? 'password' : 'text';
+  btn.textContent = showing ? 'Show' : 'Hide';
+}
+
+function clearMsg() {
+  document.getElementById('msg-error').textContent = '';
+}
+function showError(msg) {
+  document.getElementById('msg-error').textContent = msg;
+}
+
+function saveSession(d, email) {
+  var session = {
+    access_token: d.access_token,
+    refresh_token: d.refresh_token || '',
+    expires_at: Date.now() + (d.expires_in || 3600) * 1000,
+    email: email
+  };
+  try { localStorage.setItem('wt-auth', JSON.stringify(session)); } catch(e) {}
+}
+
+async function handleSubmit() {
+  if (!_sbUrl) { showError('Cannot connect to auth service. Check your Netlify deployment.'); return; }
+  var btn = document.getElementById('submit-btn');
+  clearMsg();
+
+  // ── Forgot password ──
+  if (_mode === 'forgot') {
+    var email = document.getElementById('email').value.trim();
+    if (!email) { showError('Enter your email address.'); return; }
+    btn.disabled = true; btn.textContent = 'Sending...';
+    try {
+      await fetch(_sbUrl + '/auth/v1/recover', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': _sbAnonKey },
+        body: JSON.stringify({ email: email })
+      });
+      setMode('check-email');
+    } catch(e) {
+      showError('Failed to send reset email. Try again.');
+      btn.disabled = false; btn.textContent = 'Send reset link';
+    }
+    return;
+  }
+
+  // ── Set new password (from reset link) ──
+  if (_mode === 'reset') {
+    var pass = document.getElementById('pass').value;
+    if (pass.length < 6) { showError('Password must be at least 6 characters.'); return; }
+    btn.disabled = true; btn.textContent = 'Updating...';
+    try {
+      var r = await fetch(_sbUrl + '/auth/v1/user', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'apikey': _sbAnonKey, 'Authorization': 'Bearer ' + _resetToken },
+        body: JSON.stringify({ password: pass })
+      });
+      var d = await r.json();
+      if (!r.ok) throw new Error(d.error_description || d.message || 'Failed to update password');
+      document.getElementById('msg-success').style.display = '';
+      document.getElementById('msg-success').textContent = 'Password updated! Signing you in...';
+      btn.disabled = false;
+      // Auto sign in with new password would require email — just redirect to signin
+      setTimeout(function(){ setMode('signin'); }, 2000);
+    } catch(e) {
+      showError(e.message);
+      btn.disabled = false; btn.textContent = 'Set new password';
+    }
+    return;
+  }
+
+  // ── Sign in / Sign up ──
+  var email2 = document.getElementById('email').value.trim();
+  var pass2 = document.getElementById('pass').value;
+  if (!email2 || !pass2) { showError('Email and password are required.'); return; }
+  btn.disabled = true;
+  btn.textContent = _mode === 'signup' ? 'Creating account...' : 'Signing in...';
+
+  try {
+    if (_mode === 'signup') {
+      var r2 = await fetch(_sbUrl + '/auth/v1/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': _sbAnonKey },
+        body: JSON.stringify({ email: email2, password: pass2 })
+      });
+      var d2 = await r2.json();
+      if (!r2.ok) throw new Error(d2.error_description || d2.message || 'Sign up failed');
+      if (d2.access_token) {
+        saveSession(d2, email2);
+        window.location.href = '/';
+      } else {
+        document.getElementById('msg-success').style.display = '';
+        document.getElementById('msg-success').textContent = 'Account created! Check your email to confirm, then sign in.';
+        btn.disabled = false; btn.textContent = 'Create account';
+      }
+    } else {
+      var r3 = await fetch(_sbUrl + '/auth/v1/token?grant_type=password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': _sbAnonKey },
+        body: JSON.stringify({ email: email2, password: pass2 })
+      });
+      var d3 = await r3.json();
+      if (!r3.ok) throw new Error(d3.error_description || d3.message || 'Sign in failed');
+      saveSession(d3, email2);
+      window.location.href = '/';
+    }
+  } catch(e) {
+    showError(e.message);
+    btn.disabled = false;
+    btn.textContent = _mode === 'signup' ? 'Create account' : 'Sign in';
+  }
+}
+
+// Handle password reset token in URL hash
+function checkHashForReset() {
+  var hash = window.location.hash.slice(1);
+  if (!hash) return;
+  var params = {};
+  hash.split('&').forEach(function(part) {
+    var kv = part.split('=');
+    params[decodeURIComponent(kv[0])] = decodeURIComponent(kv[1] || '');
+  });
+  if (params.type === 'recovery' && params.access_token) {
+    _resetToken = params.access_token;
+    history.replaceState(null, '', window.location.pathname);
+    setMode('reset');
+    return true;
+  }
+  return false;
+}
+
+// If already logged in with a valid session, skip the login page
+function checkExistingSession() {
+  try {
+    var s = localStorage.getItem('wt-auth');
+    if (!s) return;
+    var session = JSON.parse(s);
+    if (session && session.access_token && session.expires_at > Date.now() + 60000) {
+      window.location.href = '/';
+    }
+  } catch(e) {}
+}
+
+(async function() {
+  var isReset = checkHashForReset();
+  if (!isReset) checkExistingSession();
+  await loadConfig();
+  if (!_sbUrl) {
+    showError('Cannot connect to auth service. Make sure the app is deployed on Netlify.');
+  }
+})();
+</script>
+</body>
+</html>

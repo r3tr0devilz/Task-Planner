@@ -3,19 +3,21 @@ const crypto = require('crypto');
 function verifyJWT(token, secret) {
   const parts = token.split('.');
   if (parts.length !== 3) throw new Error('Invalid token');
-  const sig = crypto.createHmac('sha256', secret)
-    .update(parts[0] + '.' + parts[1])
-    .digest('base64url');
-  if (sig !== parts[2]) throw new Error('Invalid signature');
+  const msg = parts[0] + '.' + parts[1];
+  const sigB64url = crypto.createHmac('sha256', secret).update(msg).digest('base64url');
+  // Also accept standard base64 with padding stripped (some JWT libs produce this)
+  const sigB64 = crypto.createHmac('sha256', secret).update(msg).digest('base64')
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+  if (sigB64url !== parts[2] && sigB64 !== parts[2]) throw new Error('Invalid signature');
   const payload = JSON.parse(Buffer.from(parts[1], 'base64url').toString('utf8'));
   if (payload.exp && Math.floor(Date.now() / 1000) > payload.exp) throw new Error('Token expired');
   return payload;
 }
 
 exports.handler = async function(event) {
-  const SUPABASE_URL = process.env.SUPABASE_URL;
-  const SUPABASE_KEY = process.env.SUPABASE_KEY;
-  const JWT_SECRET = process.env.SUPABASE_JWT_SECRET;
+  const SUPABASE_URL = (process.env.SUPABASE_URL || '').trim();
+  const SUPABASE_KEY = (process.env.SUPABASE_KEY || '').trim();
+  const JWT_SECRET = (process.env.SUPABASE_JWT_SECRET || '').trim();
 
   if (!SUPABASE_URL || !SUPABASE_KEY) {
     return { statusCode: 500, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ error: 'Supabase env vars not configured' }) };

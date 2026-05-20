@@ -19,13 +19,21 @@ body{
   color:#e2e2ee;
 }
 .card{
-  background:#15151e;
-  border:1px solid rgba(255,255,255,.08);
+  background:rgba(21,21,30,0.72);
+  border:1px solid rgba(255,255,255,.12);
   border-radius:20px;
   padding:38px 34px;
   width:100%;
   max-width:390px;
-  box-shadow:0 16px 60px rgba(0,0,0,.55);
+  box-shadow:0 16px 60px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,0.10);
+  backdrop-filter:blur(28px) saturate(160%);
+  -webkit-backdrop-filter:blur(28px) saturate(160%);
+  position:relative;
+  overflow:hidden;
+}
+.card::before{
+  content:'';pointer-events:none;position:absolute;inset:0;border-radius:20px;
+  background:linear-gradient(135deg,rgba(255,255,255,0.10) 0%,rgba(255,255,255,0.02) 40%,transparent 70%);
 }
 .logo{font-size:26px;font-weight:800;margin-bottom:4px;letter-spacing:-.4px;}
 .logo-sub{font-size:13px;color:#6e6e98;margin-bottom:30px;line-height:1.5;}

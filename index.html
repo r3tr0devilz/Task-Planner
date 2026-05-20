@@ -890,6 +890,68 @@ html[data-theme="glass-light"] .card-low{background:rgba(240,255,243,0.72)!impor
 html[data-theme="glass-dark"] .btn-status{background:rgba(255,255,255,0.08);color:var(--text);border:1px solid rgba(255,255,255,0.15);}
 html[data-theme="glass-light"] .btn-status{background:rgba(0,0,0,0.06);color:var(--text);border:1px solid rgba(0,0,0,0.15);}
 
+/* ===== LIQUID GLASS ===== */
+/* Specular highlight on glass themes — the "liquid" shimmer */
+[data-theme="glass-dark"] .folder-body::before,
+[data-theme="glass-light"] .folder-body::before,
+[data-theme="glass-dark"] .folder-tab.active::before,
+[data-theme="glass-light"] .folder-tab.active::before{
+  content:'';pointer-events:none;position:absolute;inset:0;border-radius:inherit;
+  background:linear-gradient(135deg,rgba(255,255,255,0.18) 0%,rgba(255,255,255,0.04) 40%,transparent 70%);
+  z-index:0;
+}
+[data-theme="glass-dark"] .folder-body,
+[data-theme="glass-light"] .folder-body,
+[data-theme="glass-dark"] .folder-tab.active,
+[data-theme="glass-light"] .folder-tab.active{position:relative;overflow:hidden;}
+
+/* Iridescent edge shimmer on glass panels */
+[data-theme="glass-dark"] .folder-body,
+[data-theme="glass-light"] .folder-body{
+  box-shadow:0 8px 40px rgba(0,0,0,0.20),0 0 0 1px rgba(255,255,255,0.10),inset 0 1px 0 rgba(255,255,255,0.22)!important;
+}
+[data-theme="glass-light"] .folder-body{
+  box-shadow:0 8px 40px rgba(80,60,180,0.10),0 0 0 1px rgba(160,140,255,0.18),inset 0 1px 0 rgba(255,255,255,0.55)!important;
+}
+
+/* Glass card shimmer */
+[data-theme="glass-dark"] .card,[data-theme="glass-dark"] .kanban-card{
+  background:rgba(20,14,48,0.58)!important;
+  backdrop-filter:blur(12px) saturate(140%);-webkit-backdrop-filter:blur(12px) saturate(140%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.12),0 2px 8px rgba(0,0,0,0.22)!important;
+}
+[data-theme="glass-light"] .card,[data-theme="glass-light"] .kanban-card{
+  background:rgba(255,255,255,0.62)!important;
+  backdrop-filter:blur(12px) saturate(140%);-webkit-backdrop-filter:blur(12px) saturate(140%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.75),0 2px 8px rgba(100,80,200,0.08)!important;
+}
+
+/* Glass dropdowns — all themes get liquid blur */
+.status-drop-menu{
+  backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);
+  background:var(--surface)!important;
+  box-shadow:0 8px 32px rgba(0,0,0,0.28),inset 0 1px 0 rgba(255,255,255,0.12)!important;
+}
+/* Glass modals — all themes */
+.modal,.modal-footer,.overlay-box,.splash-box,.focus-picker-box{
+  backdrop-filter:blur(24px) saturate(160%);-webkit-backdrop-filter:blur(24px) saturate(160%);
+}
+/* Glass toast */
+.splash-overlay{
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+/* Login card gets liquid glass */
+/* (applied via login.html — see below) */
+
+/* Liquid Glass active tab pulse — subtle glow on active tab for glass themes */
+[data-theme="glass-dark"] .folder-tab.active{
+  box-shadow:0 0 0 1.5px rgba(167,139,250,0.4),0 2px 12px rgba(100,60,200,0.25),inset 0 1px 0 rgba(255,255,255,0.18)!important;
+}
+[data-theme="glass-light"] .folder-tab.active{
+  box-shadow:0 0 0 1.5px rgba(124,58,237,0.25),0 2px 12px rgba(100,80,200,0.12),inset 0 1px 0 rgba(255,255,255,0.60)!important;
+}
+/* ===== END LIQUID GLASS ===== */
+
 /* UI/UX Pro Max: keyboard focus, SVG alignment, reduced motion */
 button:focus-visible,a:focus-visible,[tabindex]:focus-visible,.folder-tab:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:3px;}
 button svg,.tab-icon svg{display:inline-block;vertical-align:middle;pointer-events:none;flex-shrink:0;}
@@ -1245,7 +1307,10 @@ async function pullFromSupabase(){
   try{
     setSyncStatus('&#x2601; Syncing...','var(--muted)');
     var r=await fetch('/.netlify/functions/sync',{headers:{'Authorization':'Bearer '+token}});
-    if(!r.ok)throw new Error('HTTP '+r.status);
+    if(!r.ok){
+      var errBody='';try{var j=await r.json();errBody=j.error||'';}catch(e){}
+      throw new Error('HTTP '+r.status+(errBody?' — '+errBody:''));
+    }
     var rows=await r.json();
     if(rows&&rows.length&&rows[0].data&&Object.keys(rows[0].data).length){
       var cloudTime=new Date(rows[0].updated_at).getTime();
@@ -1269,7 +1334,7 @@ async function pullFromSupabase(){
       if(isFirst)showSplashIfNeeded();
     }
   }catch(ex){
-    setSyncStatus('&#x26A0;&#xFE0F; Sync failed','#c04040');
+    setSyncStatus('Sync failed: '+ex.message,'#c04040');
     console.warn('Sync pull error:',ex);
     if(isFirst)showSplashIfNeeded();
   }
@@ -1296,12 +1361,15 @@ async function pushToSupabase(silent){
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
       body:JSON.stringify(payload)
     });
-    if(!r.ok)throw new Error('HTTP '+r.status);
+    if(!r.ok){
+      var errBody='';try{var j=await r.json();errBody=j.error||'';}catch(e){}
+      throw new Error('HTTP '+r.status+(errBody?' — '+errBody:''));
+    }
     _lastPushedAt=Date.now();
     try{localStorage.setItem('wt-last-push',String(_lastPushedAt));}catch(e){}
     if(!silent)setSyncStatus('&#x2705; Saved to cloud','var(--hint)');
   }catch(ex){
-    if(!silent)setSyncStatus('&#x26A0;&#xFE0F; Cloud save failed','#c04040');
+    if(!silent)setSyncStatus('Save failed: '+ex.message,'#c04040');
     console.warn('Sync push error:',ex);
   }
 }
@@ -1367,7 +1435,11 @@ async function getValidToken(){
   if(!_authSession)return null;
   if(_authSession.expires_at-Date.now()<60000){
     var ok=await refreshAuthToken();
-    if(!ok){clearAuth();showLoginScreen();return null;}
+    if(!ok){
+      // Only force re-login if the token is actually expired — not on network errors or missing config
+      if(Date.now()>_authSession.expires_at){clearAuth();showLoginScreen();return null;}
+      // Token still valid for a short while — use it; next sync attempt will retry refresh
+    }
   }
   return _authSession.access_token;
 }

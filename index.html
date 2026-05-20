@@ -3783,7 +3783,7 @@ applyTabSettings();
 
 /* ===== CLOCK PANEL ===== */
 var _clockInterval=null,_clockMode=false,_clockFmt='24',_clockPos='left',_clockRing='chime';
-var _timers=[],_timerInterval=null,_showNewTimerForm=false,_numpadDigits='000000';
+var _timers=[],_timerInterval=null,_ringInterval=null,_showNewTimerForm=false,_numpadDigits='000000';
 var RINGS=[['chime','Chime'],['bell','Bell'],['digital','Digital'],['alarm','Alarm'],['pomodoro','Pomodoro'],['none','Silent']];
 
 function loadClockPrefs(){
@@ -3793,7 +3793,7 @@ function loadClockPrefs(){
     _clockRing=localStorage.getItem('wt-clock-ring')||'chime';
     var saved=localStorage.getItem('wt-clock-timers');
     _timers=saved?JSON.parse(saved):[];
-    _timers.forEach(function(t){t.running=false;t.fired=false;});
+    _timers.forEach(function(t){t.running=false;t.fired=false;t.ringing=false;});
   }catch(e){}
 }
 function saveClockPrefs(){
@@ -3860,17 +3860,30 @@ function confirmNewTimer(){
   _showNewTimerForm=false;_numpadDigits='000000';
   saveClockPrefs();renderTimers();ensureTimerTick();
 }
-function removeClockTimer(id){_timers=_timers.filter(function(t){return t.id!==id;});saveClockPrefs();renderTimers();}
+function stopRinging(id){
+  var t=_timers.find(function(x){return x.id===id;});
+  if(t)t.ringing=false;
+  if(!_timers.some(function(x){return x.ringing;})){clearInterval(_ringInterval);_ringInterval=null;}
+}
+function removeClockTimer(id){stopRinging(id);_timers=_timers.filter(function(t){return t.id!==id;});saveClockPrefs();renderTimers();}
 function startClockTimer(id){
   var t=_timers.find(function(x){return x.id===id;});if(!t)return;
+  stopRinging(id);
   if(t.remaining<=0){t.remaining=t.duration;t.fired=false;}
   t.running=true;renderTimers();ensureTimerTick();
 }
-function pauseClockTimer(id){var t=_timers.find(function(x){return x.id===id;});if(t){t.running=false;renderTimers();}}
-function resetClockTimer(id){var t=_timers.find(function(x){return x.id===id;});if(!t)return;t.remaining=t.duration;t.running=false;t.fired=false;saveClockPrefs();renderTimers();}
+function pauseClockTimer(id){var t=_timers.find(function(x){return x.id===id;});if(t){stopRinging(id);t.running=false;renderTimers();}}
+function resetClockTimer(id){var t=_timers.find(function(x){return x.id===id;});if(!t)return;stopRinging(id);t.remaining=t.duration;t.running=false;t.fired=false;saveClockPrefs();renderTimers();}
 function ensureTimerTick(){
   if(!_timerInterval&&_timers.some(function(t){return t.running;}))
     _timerInterval=setInterval(tickTimers,1000);
+}
+function startRingRepeat(){
+  if(_ringInterval)return;
+  _ringInterval=setInterval(function(){
+    if(!_timers.some(function(t){return t.ringing;})){clearInterval(_ringInterval);_ringInterval=null;return;}
+    _timers.forEach(function(t){if(t.ringing)playRingtone(_clockRing);});
+  },4000);
 }
 function tickTimers(){
   var anyRunning=false;
@@ -3879,7 +3892,7 @@ function tickTimers(){
     t.remaining=Math.max(0,t.remaining-1);
     if(t.remaining===0){
       t.running=false;
-      if(!t.fired){t.fired=true;playRingtone(_clockRing);}
+      if(!t.fired){t.fired=true;t.ringing=true;playRingtone(_clockRing);startRingRepeat();}
       renderTimers();
     } else {
       anyRunning=true;
@@ -3894,7 +3907,7 @@ function renderTimers(){
   _timers.forEach(function(t){
     var cls='clock-timer-item'+(t.running?' running':'')+(t.remaining===0&&t.fired?' finished':'');
     var ctrl='';
-    if(t.running){ctrl='<button class="clock-timer-btn" onclick="pauseClockTimer('+t.id+')">&#9646;&#9646;</button>';}
+    if(t.running){ctrl='<button class="clock-timer-btn" onclick="pauseClockTimer('+t.id+')" aria-label="Pause"><svg width="9" height="10" viewBox="0 0 9 10" fill="currentColor"><rect x="0" y="0" width="3" height="10" rx="0.5"/><rect x="6" y="0" width="3" height="10" rx="0.5"/></svg></button>';}
     else if(t.remaining===0){ctrl='<button class="clock-timer-btn play" onclick="startClockTimer('+t.id+')">&#8635;</button>';}
     else{
       ctrl='<button class="clock-timer-btn play" onclick="startClockTimer('+t.id+')">&#9654;</button>';

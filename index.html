@@ -13,7 +13,7 @@
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -212,7 +212,7 @@
   --coral:#d46060;--coral-bg:#2e1414;--coral-text:#e89090;
 }
 html{background:var(--bg);}
-body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;font-size:14px;line-height:1.5;min-height:100vh;}
+body{background:var(--bg);color:var(--text);font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:14px;line-height:1.5;min-height:100vh;}
 
 /* PAGE */
 .page-wrap{max-width:1220px;margin:0 auto;padding:16px 20px 40px;}
@@ -237,7 +237,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
   position:relative;
   margin-bottom:-1.5px;
   user-select:none;
-  font-family:'DM Sans',inherit;
+  font-family:'Plus Jakarta Sans',inherit;
   line-height:1;
 }
 .folder-tab:hover{background:var(--surface);color:var(--text);}
@@ -410,7 +410,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans
 }
 
 /* BUTTONS */
-button{cursor:pointer;font-family:'DM Sans',inherit;font-size:12px;padding:5px 11px;border-radius:var(--r);border:1px solid var(--border-md);background:var(--surface);color:var(--text);transition:background .12s,transform .08s;line-height:1.4;}
+button{cursor:pointer;font-family:'Plus Jakarta Sans',inherit;font-size:12px;padding:5px 11px;border-radius:var(--r);border:1px solid var(--border-md);background:var(--surface);color:var(--text);transition:background .12s,transform .08s;line-height:1.4;}
 button:hover{background:var(--surface2);}
 button:active{transform:scale(0.97);}
 button.prim{background:var(--text);color:var(--bg);border-color:var(--text);}
@@ -609,7 +609,7 @@ textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(2
 
 /* CALENDAR */
 .cal-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
-.cal-month-title{font-size:16px;font-weight:600;min-width:160px;font-family:'DM Sans',inherit;}
+.cal-month-title{font-size:16px;font-weight:600;min-width:160px;font-family:'Plus Jakarta Sans',inherit;}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:8px;}
 .cal-dow{font-size:10px;font-weight:600;color:var(--hint);text-transform:uppercase;text-align:center;padding:4px 0;letter-spacing:0.07em;}
 .cal-day{min-height:80px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:5px 6px;font-size:11px;overflow:hidden;}
@@ -889,6 +889,14 @@ html[data-theme="glass-light"] .card-low{background:rgba(240,255,243,0.72)!impor
 /* Glass: status buttons on cards */
 html[data-theme="glass-dark"] .btn-status{background:rgba(255,255,255,0.08);color:var(--text);border:1px solid rgba(255,255,255,0.15);}
 html[data-theme="glass-light"] .btn-status{background:rgba(0,0,0,0.06);color:var(--text);border:1px solid rgba(0,0,0,0.15);}
+
+/* UI/UX Pro Max: keyboard focus, SVG alignment, reduced motion */
+button:focus-visible,a:focus-visible,[tabindex]:focus-visible,.folder-tab:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:3px;}
+button svg,.tab-icon svg{display:inline-block;vertical-align:middle;pointer-events:none;flex-shrink:0;}
+.folder-tab .tab-icon{display:inline-flex;align-items:center;line-height:1;}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;animation-iteration-count:1!important;}
+}
 </style>
 </head>
 <body>
@@ -1056,15 +1064,15 @@ html[data-theme="glass-light"] .btn-status{background:rgba(0,0,0,0.06);color:var
       <div id="hdr-save" role="status" aria-live="polite" style="font-size:10px;color:var(--hint);margin-top:1px;"></div>
     </div>
     <div class="hdr-actions">
-      <button id="hdr-btn-save" onclick="dlJSON()" title="Save data" aria-label="Save data to file">&#x1F4BE; <span class="hdr-label">Save data</span></button>
-      <label id="hdr-btn-load-wrap" style="cursor:pointer;display:contents;"><button onclick="this.closest('label').querySelector('input').click()" title="Load data" aria-label="Load data from file">⬆️ <span class="hdr-label">Load data</span></button><input type="file" accept=".json" style="display:none" onchange="importJSON(this)"></label>
-      <button id="hdr-btn-cal" onclick="exportDeadlineReminders()" title="Export deadline reminders" aria-label="Export deadline reminders to calendar">&#x1F4C5; <span class="hdr-label">Calendar</span></button>
-      <button onclick="switchFolderTab('settings')" id="settings-btn" title="Settings" aria-label="Open settings">&#x2699;&#xFE0F; <span class="hdr-label">Settings</span></button>
-      <button id="hdr-btn-buckets" onclick="openBucketModal()" title="Buckets" aria-label="Manage buckets">&#x1F5C2; <span class="hdr-label">Buckets</span></button>
-      <button onclick="startCI()" style="background:#c0152a;color:#fff;border-color:#a01020;font-weight:500;" title="Daily check-in" aria-label="Start daily check-in">&#x23F0; <span class="hdr-label">Daily check-in</span></button>
-      <button onclick="openFocusSelect()" style="background:#5b21b6;color:#f5f3ff;border-color:#7c3aed;font-weight:500;box-shadow:0 2px 8px rgba(91,33,182,.3);" title="Focus mode" aria-label="Start focus mode">&#x1F3AF; <span class="hdr-label">Focus</span></button>
-      <button id="sync-btn" onclick="syncNow()" title="Sync data" aria-label="Sync with cloud" style="display:none;">&#x2601;&#xFE0F; <span class="hdr-label">Sync</span></button>
-      <button id="theme-btn" onclick="toggleTheme()" title="Toggle dark mode" aria-label="Toggle light/dark theme">&#9681;</button>
+      <button id="hdr-btn-save" onclick="dlJSON()" title="Save data" aria-label="Save data to file"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> <span class="hdr-label">Save data</span></button>
+      <label id="hdr-btn-load-wrap" style="cursor:pointer;display:contents;"><button onclick="this.closest('label').querySelector('input').click()" title="Load data" aria-label="Load data from file"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> <span class="hdr-label">Load data</span></button><input type="file" accept=".json" style="display:none" onchange="importJSON(this)"></label>
+      <button id="hdr-btn-cal" onclick="exportDeadlineReminders()" title="Export deadline reminders" aria-label="Export deadline reminders to calendar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> <span class="hdr-label">Calendar</span></button>
+      <button onclick="switchFolderTab('settings')" id="settings-btn" title="Settings" aria-label="Open settings"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> <span class="hdr-label">Settings</span></button>
+      <button id="hdr-btn-buckets" onclick="openBucketModal()" title="Buckets" aria-label="Manage buckets"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> <span class="hdr-label">Buckets</span></button>
+      <button onclick="startCI()" style="background:#c0152a;color:#fff;border-color:#a01020;font-weight:500;" title="Daily check-in" aria-label="Start daily check-in"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> <span class="hdr-label">Daily check-in</span></button>
+      <button onclick="openFocusSelect()" style="background:#5b21b6;color:#f5f3ff;border-color:#7c3aed;font-weight:500;box-shadow:0 2px 8px rgba(91,33,182,.3);" title="Focus mode" aria-label="Start focus mode"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> <span class="hdr-label">Focus</span></button>
+      <button id="sync-btn" onclick="syncNow()" title="Sync data" aria-label="Sync with cloud" style="display:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg> <span class="hdr-label">Sync</span></button>
+      <button id="theme-btn" onclick="toggleTheme()" title="Toggle dark mode" aria-label="Toggle light/dark theme"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       <button id="hdr-btn-shortcuts" onclick="showShortcuts()" title="Keyboard shortcuts (press ? anytime)" aria-label="Show keyboard shortcuts" style="font-size:13px;font-weight:700;min-width:28px;">?</button>
     </div>
   </div>
@@ -1125,24 +1133,24 @@ html[data-theme="glass-light"] .btn-status{background:rgba(0,0,0,0.06);color:var
   <!-- FOLDER TABS -->
   <div class="folder-tabs" role="tablist" aria-label="App sections">
     <button class="folder-tab active" id="ftab-planner" role="tab" aria-selected="true" aria-controls="main" onclick="switchFolderTab('planner')">
-      <span class="tab-icon">&#x1F4CB;</span> Task Planner
+      <span class="tab-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></span> Task Planner
       <span class="tab-count" id="ftab-count-planner">0</span>
     </button>
     <button class="folder-tab" id="ftab-calendar" role="tab" aria-selected="false" onclick="switchFolderTab('calendar')">
-      <span class="tab-icon">&#x1F4C5;</span> Calendar
+      <span class="tab-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Calendar
       <span class="tab-count" id="ftab-count-calendar">0</span>
     </button>
     <button class="folder-tab" id="ftab-kanban" role="tab" aria-selected="false" onclick="switchFolderTab('kanban')">
-      <span class="tab-icon">&#x268F;</span> Kanban
+      <span class="tab-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="10" y="3" width="5" height="12" rx="1"/><rect x="17" y="3" width="5" height="15" rx="1"/></svg></span> Kanban
     </button>
     <button class="folder-tab" id="ftab-export" role="tab" aria-selected="false" onclick="switchFolderTab('export')">
-      <span class="tab-icon">&#x1F4E4;</span> Export
+      <span class="tab-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span> Export
     </button>
     <button class="folder-tab" id="ftab-stats" role="tab" aria-selected="false" onclick="switchFolderTab('stats')">
-      <span class="tab-icon">&#x1F4CA;</span> Stats
+      <span class="tab-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span> Stats
     </button>
     <button class="folder-tab" id="ftab-settings" role="tab" aria-selected="false" style="display:none;" onclick="switchFolderTab('settings')">
-      <span class="tab-icon">&#x2699;&#xFE0F;</span> Settings
+      <span class="tab-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span> Settings
     </button>
   </div>
 

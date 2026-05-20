@@ -895,6 +895,10 @@ html[data-theme="glass-light"] .btn-status{background:rgba(0,0,0,0.06);color:var
 .page-main-col{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden;}
 .page-main-col .folder-tabs{flex-shrink:0;}
 .page-main-col .folder-body{flex:1;min-height:0;overflow-y:auto;}
+.page-main-col .folder-inner{overflow:visible;}
+.page-main-col .main{overflow:visible;}
+.page-main-col .folder-toolbar{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;}
+.page-main-col .folder-toolbar::-webkit-scrollbar{display:none;}
 .page-main-col .page-header{flex-shrink:0;}
 .page-wrap.clock-mode.clock-right #clock-panel{order:2;}
 .page-wrap.clock-mode.clock-right #page-main-col{order:1;}
@@ -975,6 +979,7 @@ html[data-theme="glass-light"] .btn-status{background:rgba(0,0,0,0.06);color:var
 .clock-quote{font-size:10px;color:rgba(255,255,255,0.18);font-style:italic;letter-spacing:0.04em;text-align:center;line-height:1.6;}
 .clock-close-btn{
   position:absolute;top:10px;right:10px;z-index:2;
+  width:auto;
   background:none;border:none;color:rgba(255,255,255,0.28);
   font-size:16px;cursor:pointer;padding:3px 7px;line-height:1;border-radius:5px;
   transition:color .15s,background .15s;

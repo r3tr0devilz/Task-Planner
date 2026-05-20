@@ -896,46 +896,164 @@ html[data-theme="glass-light"] .btn-status{background:rgba(0,0,0,0.06);color:var
 .page-main-col .folder-tabs{flex-shrink:0;}
 .page-main-col .folder-body{flex:1;min-height:0;overflow-y:auto;}
 .page-main-col .page-header{flex-shrink:0;}
+/* Right-side position — CSS order flip, no DOM move needed */
+.page-wrap.clock-mode.clock-right #clock-panel{order:2;}
+.page-wrap.clock-mode.clock-right #page-main-col{order:1;}
 
 #clock-panel{
-  width:272px;flex-shrink:0;
-  display:flex;flex-direction:column;justify-content:center;align-items:center;gap:20px;
+  width:296px;flex-shrink:0;
+  display:flex;flex-direction:column;align-items:center;gap:13px;
   background:rgba(6,4,18,0.92);
   border-radius:16px;border:1px solid rgba(255,255,255,0.10);
   backdrop-filter:blur(28px) saturate(140%);-webkit-backdrop-filter:blur(28px) saturate(140%);
   box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),0 8px 40px rgba(0,0,0,0.45);
-  padding:32px 24px;position:relative;color:#fff;
+  padding:22px 20px 20px;position:relative;color:#fff;overflow-y:auto;overflow-x:hidden;
+  scrollbar-width:none;
 }
+#clock-panel::-webkit-scrollbar{display:none;}
 #clock-panel::before{
-  content:'';pointer-events:none;position:absolute;inset:0;border-radius:16px;
+  content:'';pointer-events:none;position:absolute;inset:0;border-radius:16px;z-index:0;
   background:linear-gradient(160deg,rgba(255,255,255,0.07) 0%,transparent 55%);
 }
-.clock-time{
-  font-family:'DM Mono',monospace;font-size:60px;font-weight:400;
-  letter-spacing:-3px;color:#fff;line-height:1;
-  text-shadow:0 0 48px rgba(167,139,250,0.55),0 0 80px rgba(120,100,200,0.25);
+#clock-panel>*{position:relative;z-index:1;width:100%;}
+
+/* Glass theme adaptation */
+[data-theme="glass-dark"] #clock-panel{
+  background:rgba(15,8,42,0.55);border-color:rgba(167,139,250,0.18);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.12),0 8px 40px rgba(0,0,0,0.30);
 }
-.clock-colon{display:inline-block;animation:clkBlink 1s step-end infinite;opacity:1;}
+[data-theme="glass-light"] #clock-panel{
+  background:rgba(250,248,255,0.78);border-color:rgba(109,40,217,0.18);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.90),0 4px 24px rgba(109,40,217,0.10);
+  color:#1e1b4b;
+}
+[data-theme="glass-light"] .clock-time{color:#2d1b69;text-shadow:0 0 28px rgba(109,40,217,0.18);}
+[data-theme="glass-light"] .clock-ampm{color:rgba(109,40,217,0.60);}
+[data-theme="glass-light"] .clock-date,[data-theme="glass-light"] .clock-quote{color:rgba(45,27,105,0.45);}
+[data-theme="glass-light"] .clock-progress-label{color:rgba(45,27,105,0.40);}
+[data-theme="glass-light"] .clock-progress-bar{background:rgba(109,40,217,0.10);}
+[data-theme="glass-light"] .clock-close-btn{color:rgba(45,27,105,0.35);}
+[data-theme="glass-light"] .clock-close-btn:hover{color:rgba(45,27,105,0.80);background:rgba(109,40,217,0.08);}
+[data-theme="glass-light"] .clock-settings-btn{color:rgba(45,27,105,0.60);border-color:rgba(45,27,105,0.15);}
+[data-theme="glass-light"] .clock-settings-btn:hover{background:rgba(109,40,217,0.08);color:#2d1b69;}
+[data-theme="glass-light"] .clock-settings-btn.active-fmt{background:rgba(109,40,217,0.15);border-color:rgba(109,40,217,0.40);color:#5b21b6;}
+[data-theme="glass-light"] .clock-section-divider{border-color:rgba(45,27,105,0.10);}
+[data-theme="glass-light"] .clock-timers-header span{color:rgba(45,27,105,0.40);}
+[data-theme="glass-light"] .clock-add-timer-btn{background:rgba(109,40,217,0.12);border-color:rgba(109,40,217,0.30);color:#5b21b6;}
+[data-theme="glass-light"] .clock-timer-item{background:rgba(109,40,217,0.05);border-color:rgba(109,40,217,0.12);}
+[data-theme="glass-light"] .clock-timer-item.running{border-color:rgba(109,40,217,0.35);}
+[data-theme="glass-light"] .clock-timer-name{color:#1e1b4b;}
+[data-theme="glass-light"] .clock-timer-remaining{color:#5b21b6;}
+[data-theme="glass-light"] .clock-timer-ring-select{background:rgba(109,40,217,0.06);border-color:rgba(109,40,217,0.15);color:rgba(45,27,105,0.70);}
+[data-theme="glass-light"] .clock-timer-btn{background:rgba(109,40,217,0.06);border-color:rgba(109,40,217,0.12);color:rgba(45,27,105,0.60);}
+[data-theme="glass-light"] .clock-timer-btn:hover{background:rgba(109,40,217,0.14);color:#2d1b69;}
+[data-theme="glass-light"] .clock-timer-btn.play{background:rgba(109,40,217,0.14);border-color:rgba(109,40,217,0.35);color:#5b21b6;}
+[data-theme="glass-light"] .clock-new-timer-form{background:rgba(109,40,217,0.05);border-color:rgba(109,40,217,0.20);}
+[data-theme="glass-light"] .clock-new-timer-form input,[data-theme="glass-light"] .clock-new-timer-form select{background:rgba(109,40,217,0.06);border-color:rgba(109,40,217,0.15);color:#1e1b4b;}
+[data-theme="glass-light"] .clock-new-timer-row button{background:rgba(109,40,217,0.05);border-color:rgba(109,40,217,0.15);color:rgba(45,27,105,0.65);}
+
+/* Clock settings row */
+.clock-settings-row{display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:2px;}
+.clock-settings-btn{
+  flex:1;background:none;border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.48);
+  font-size:10px;font-weight:600;padding:4px 6px;border-radius:7px;cursor:pointer;
+  font-family:inherit;letter-spacing:0.05em;text-transform:uppercase;
+  transition:all .15s;line-height:1.4;white-space:nowrap;
+}
+.clock-settings-btn:hover{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.80);}
+.clock-settings-btn.active-fmt{background:rgba(124,58,237,0.20);border-color:rgba(124,58,237,0.45);color:#a78bfa;}
+
+/* Time display */
+.clock-time-wrap{display:flex;align-items:baseline;justify-content:center;gap:5px;width:100%;}
+.clock-time{
+  font-family:'DM Mono',monospace;font-size:38px;font-weight:400;
+  letter-spacing:-1px;color:#fff;line-height:1;white-space:nowrap;
+  text-shadow:0 0 40px rgba(167,139,250,0.55),0 0 70px rgba(120,100,200,0.22);
+}
+.clock-colon{display:inline-block;animation:clkBlink 1s step-end infinite;}
 @keyframes clkBlink{50%{opacity:0.2;}}
-.clock-date{font-size:11px;color:rgba(255,255,255,0.45);letter-spacing:0.08em;text-transform:uppercase;text-align:center;line-height:1.6;}
+.clock-ampm{
+  font-family:'DM Mono',monospace;font-size:13px;color:rgba(167,139,250,0.70);
+  letter-spacing:0.05em;line-height:1;align-self:flex-end;padding-bottom:3px;min-width:20px;
+}
+.clock-date{font-size:10px;color:rgba(255,255,255,0.38);letter-spacing:0.08em;text-transform:uppercase;text-align:center;line-height:1.6;}
 .clock-progress-wrap{width:100%;}
-.clock-progress-label{display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,0.35);margin-bottom:7px;text-transform:uppercase;letter-spacing:0.08em;}
+.clock-progress-label{display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,0.30);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.08em;}
 .clock-progress-bar{height:3px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;}
 .clock-progress-fill{height:100%;background:linear-gradient(90deg,#7c3aed,#a78bfa);border-radius:2px;transition:width 1s linear;}
-.clock-quote{font-size:11px;color:rgba(255,255,255,0.20);font-style:italic;letter-spacing:0.04em;text-align:center;}
+.clock-quote{font-size:10px;color:rgba(255,255,255,0.18);font-style:italic;letter-spacing:0.04em;text-align:center;line-height:1.6;}
 .clock-close-btn{
-  position:absolute;top:10px;right:10px;
-  background:none;border:none;color:rgba(255,255,255,0.30);
+  position:absolute;top:10px;right:10px;z-index:2;
+  background:none;border:none;color:rgba(255,255,255,0.28);
   font-size:16px;cursor:pointer;padding:3px 7px;line-height:1;border-radius:5px;
   transition:color .15s,background .15s;
 }
 .clock-close-btn:hover{color:rgba(255,255,255,0.80);background:rgba(255,255,255,0.10);}
+.clock-section-divider{width:100%;border:none;border-top:1px solid rgba(255,255,255,0.07);margin:1px 0;}
+
+/* Timers */
+.clock-timers-section{width:100%;display:flex;flex-direction:column;gap:7px;}
+.clock-timers-header{display:flex;justify-content:space-between;align-items:center;font-size:10px;color:rgba(255,255,255,0.32);text-transform:uppercase;letter-spacing:0.08em;}
+.clock-add-timer-btn{
+  background:rgba(124,58,237,0.18);border:1px solid rgba(124,58,237,0.35);
+  color:#a78bfa;font-size:15px;width:20px;height:20px;border-radius:5px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  line-height:1;padding:0;transition:all .15s;font-family:inherit;
+}
+.clock-add-timer-btn:hover{background:rgba(124,58,237,0.30);}
+.clock-timer-item{
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+  border-radius:9px;padding:9px 10px;display:flex;flex-direction:column;gap:6px;
+  transition:border-color .15s;
+}
+.clock-timer-item.running{border-color:rgba(124,58,237,0.40);background:rgba(124,58,237,0.05);}
+.clock-timer-item.finished{border-color:rgba(239,68,68,0.45);background:rgba(239,68,68,0.05);}
+.clock-timer-row1{display:flex;justify-content:space-between;align-items:center;gap:6px;}
+.clock-timer-name{font-size:12px;font-weight:600;color:#e2e2ee;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.clock-timer-remaining{font-family:'DM Mono',monospace;font-size:13px;color:#a78bfa;white-space:nowrap;}
+.clock-timer-row2{display:flex;align-items:center;gap:4px;}
+.clock-timer-ring-select{
+  font-size:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.10);
+  color:rgba(255,255,255,0.48);border-radius:5px;padding:3px 5px;cursor:pointer;font-family:inherit;
+  flex:1;min-width:0;outline:none;
+}
+.clock-timer-ring-select:focus{border-color:rgba(124,58,237,0.45);}
+.clock-timer-controls{display:flex;gap:3px;flex-shrink:0;}
+.clock-timer-btn{
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.10);
+  color:rgba(255,255,255,0.55);font-size:11px;padding:3px 7px;border-radius:5px;
+  cursor:pointer;font-family:inherit;transition:all .15s;line-height:1.4;
+}
+.clock-timer-btn:hover{background:rgba(255,255,255,0.12);color:#fff;}
+.clock-timer-btn.play{background:rgba(124,58,237,0.18);border-color:rgba(124,58,237,0.35);color:#a78bfa;}
+.clock-timer-btn.play:hover{background:rgba(124,58,237,0.30);}
+.clock-timer-btn.del{color:rgba(239,68,68,0.45);}
+.clock-timer-btn.del:hover{background:rgba(239,68,68,0.10);border-color:rgba(239,68,68,0.25);color:#f87171;}
+.clock-new-timer-form{
+  background:rgba(255,255,255,0.03);border:1px solid rgba(124,58,237,0.22);
+  border-radius:9px;padding:10px;display:flex;flex-direction:column;gap:6px;
+}
+.clock-new-timer-form input,.clock-new-timer-form select{
+  width:100%;box-sizing:border-box;padding:6px 8px;font-size:12px;font-family:inherit;
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);
+  color:#e2e2ee;border-radius:6px;outline:none;transition:border-color .15s;
+}
+.clock-new-timer-form input:focus,.clock-new-timer-form select:focus{border-color:rgba(124,58,237,0.50);}
+.clock-new-timer-row{display:flex;gap:5px;}
+.clock-new-timer-row button{
+  flex:1;font-size:11px;padding:5px 0;border-radius:6px;
+  border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);
+  color:rgba(255,255,255,0.55);cursor:pointer;font-family:inherit;transition:all .15s;
+}
+.clock-new-timer-row button:hover{background:rgba(255,255,255,0.10);}
+.clock-new-timer-row button.confirm{background:rgba(124,58,237,0.20);border-color:rgba(124,58,237,0.45);color:#a78bfa;}
+.clock-new-timer-row button.confirm:hover{background:rgba(124,58,237,0.35);}
+
 #clock-toggle-btn[aria-pressed="true"]{background:rgba(124,58,237,0.18);border-color:rgba(124,58,237,0.5);color:#a78bfa;}
 @media(max-width:768px){
-  .page-wrap.clock-mode{flex-direction:column;height:auto;max-height:none;overflow:visible;}
-  #clock-panel{width:100%;min-height:160px;padding:20px 24px;flex-direction:row;flex-wrap:wrap;justify-content:space-between;gap:10px;}
-  .clock-time{font-size:40px;letter-spacing:-2px;}
-  .clock-progress-wrap,.clock-quote{width:100%;}
+  .page-wrap.clock-mode,.page-wrap.clock-mode.clock-right{flex-direction:column;height:auto;max-height:none;overflow:visible;}
+  #clock-panel{width:100%;padding:18px 20px;}
+  .clock-time{font-size:48px;}
 }
 /* ===== END CLOCK MODE ===== */
 
@@ -3640,68 +3758,207 @@ updateTitle();
 applyTabSettings();
 
 /* ===== CLOCK PANEL ===== */
-var _clockInterval=null,_clockMode=false;
-function clockPanelHTML(){
-  return '<div class="clock-time" id="clock-time">00<span class="clock-colon">:</span>00<span class="clock-colon">:</span>00</div>'
-    +'<div class="clock-date" id="clock-date"></div>'
-    +'<div class="clock-progress-wrap">'
-    +'<div class="clock-progress-label"><span>Today</span><span id="clock-pct">0%</span></div>'
-    +'<div class="clock-progress-bar"><div class="clock-progress-fill" id="clock-progress-fill" style="width:0%"></div></div>'
-    +'</div>'
-    +'<div class="clock-quote">Time doesn\'t stop.</div>'
-    +'<button class="clock-close-btn" onclick="toggleClock()" aria-label="Hide clock">\xd7</button>';
+var _clockInterval=null,_clockMode=false,_clockFmt='24',_clockPos='left';
+var _timers=[],_timerInterval=null,_showNewTimerForm=false;
+
+function loadClockPrefs(){
+  try{
+    _clockFmt=localStorage.getItem('wt-clock-fmt')||'24';
+    _clockPos=localStorage.getItem('wt-clock-pos')||'left';
+    var saved=localStorage.getItem('wt-clock-timers');
+    _timers=saved?JSON.parse(saved):[];
+    _timers.forEach(function(t){t.running=false;t.fired=false;});
+  }catch(e){}
 }
+function saveClockPrefs(){
+  try{
+    localStorage.setItem('wt-clock-fmt',_clockFmt);
+    localStorage.setItem('wt-clock-pos',_clockPos);
+    var toSave=_timers.map(function(t){return {id:t.id,name:t.name,duration:t.duration,remaining:t.remaining,ring:t.ring,running:false,fired:false};});
+    localStorage.setItem('wt-clock-timers',JSON.stringify(toSave));
+  }catch(e){}
+}
+
+/* ── Ringtones (Web Audio API, no files needed) ── */
+function playRingtone(type){
+  try{
+    var ctx=new(window.AudioContext||window.webkitAudioContext)();
+    function tone(freq,start,dur,wave,vol){
+      var o=ctx.createOscillator(),g=ctx.createGain();
+      o.connect(g);g.connect(ctx.destination);
+      o.type=wave||'sine';o.frequency.value=freq;
+      g.gain.setValueAtTime(0,ctx.currentTime+start);
+      g.gain.linearRampToValueAtTime(vol||0.35,ctx.currentTime+start+0.01);
+      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+start+dur);
+      o.start(ctx.currentTime+start);o.stop(ctx.currentTime+start+dur+0.05);
+    }
+    if(type==='chime'){tone(880,0,0.8,'sine',0.3);tone(1108,0.15,0.7,'sine',0.2);tone(1320,0.32,0.9,'sine',0.25);}
+    else if(type==='bell'){tone(1047,0,1.4,'sine',0.5);tone(2094,0,0.6,'sine',0.12);}
+    else if(type==='digital'){tone(880,0,0.12,'square',0.2);tone(880,0.18,0.12,'square',0.2);tone(880,0.36,0.12,'square',0.2);}
+    else if(type==='alarm'){for(var i=0;i<5;i++){tone(880,i*0.22,0.18,'sawtooth',0.25);tone(1109,i*0.22+0.11,0.09,'sawtooth',0.15);}}
+    else if(type==='pomodoro'){tone(523,0,0.3,'sine',0.3);tone(659,0.35,0.3,'sine',0.3);tone(784,0.70,0.55,'sine',0.3);}
+    setTimeout(function(){try{ctx.close();}catch(e){}},3500);
+  }catch(e){}
+}
+
+/* ── Timer helpers ── */
+function fmtCountdown(sec){
+  var h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;
+  if(h>0)return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
+function addClockTimer(){_showNewTimerForm=true;renderTimers();}
+function cancelNewTimer(){_showNewTimerForm=false;renderTimers();}
+function confirmNewTimer(){
+  var nameEl=document.getElementById('nt-name'),durEl=document.getElementById('nt-dur'),ringEl=document.getElementById('nt-ring');
+  if(!durEl)return;
+  var mins=parseFloat(durEl.value)||0;
+  if(mins<=0){durEl.focus();return;}
+  _timers.push({id:Date.now(),name:(nameEl&&nameEl.value.trim())||'Timer',duration:Math.round(mins*60),remaining:Math.round(mins*60),running:false,fired:false,ring:(ringEl&&ringEl.value)||'chime'});
+  _showNewTimerForm=false;saveClockPrefs();renderTimers();ensureTimerTick();
+}
+function removeClockTimer(id){_timers=_timers.filter(function(t){return t.id!==id;});saveClockPrefs();renderTimers();}
+function startClockTimer(id){
+  var t=_timers.find(function(x){return x.id===id;});if(!t)return;
+  if(t.remaining<=0){t.remaining=t.duration;t.fired=false;}
+  t.running=true;renderTimers();ensureTimerTick();
+}
+function pauseClockTimer(id){var t=_timers.find(function(x){return x.id===id;});if(t){t.running=false;renderTimers();}}
+function resetClockTimer(id){var t=_timers.find(function(x){return x.id===id;});if(!t)return;t.remaining=t.duration;t.running=false;t.fired=false;saveClockPrefs();renderTimers();}
+function changeTimerRing(id,val){var t=_timers.find(function(x){return x.id===id;});if(t){t.ring=val;saveClockPrefs();}}
+function ensureTimerTick(){
+  if(!_timerInterval&&_timers.some(function(t){return t.running;}))_timerInterval=setInterval(tickTimers,1000);
+}
+function tickTimers(){
+  var anyRunning=false;
+  _timers.forEach(function(t){
+    if(!t.running)return;
+    t.remaining=Math.max(0,t.remaining-1);
+    if(t.remaining===0){
+      t.running=false;if(!t.fired){t.fired=true;playRingtone(t.ring);}renderTimers();
+    } else {
+      anyRunning=true;
+      var el=document.getElementById('tr-'+t.id);if(el)el.textContent=fmtCountdown(t.remaining);
+    }
+  });
+  if(!anyRunning){clearInterval(_timerInterval);_timerInterval=null;saveClockPrefs();}
+}
+
+var RINGS=[['chime','Chime'],['bell','Bell'],['digital','Digital'],['alarm','Alarm'],['pomodoro','Pomodoro'],['none','Silent']];
+function ringOptions(sel){return RINGS.map(function(r){return '<option value="'+r[0]+'"'+(sel===r[0]?' selected':'')+'>'+r[1]+'</option>';}).join('');}
+
+function renderTimers(){
+  var list=document.getElementById('clock-timers-list');if(!list)return;
+  var html='';
+  _timers.forEach(function(t){
+    var cls='clock-timer-item'+(t.running?' running':'')+(t.remaining===0&&t.fired?' finished':'');
+    var ctrl='';
+    if(t.running){ctrl='<button class="clock-timer-btn" onclick="pauseClockTimer('+t.id+')">&#9646;&#9646;</button>';}
+    else if(t.remaining===0){ctrl='<button class="clock-timer-btn play" onclick="startClockTimer('+t.id+')">&#8635;</button>';}
+    else{
+      ctrl='<button class="clock-timer-btn play" onclick="startClockTimer('+t.id+')">&#9654;</button>';
+      if(t.remaining!==t.duration)ctrl+='<button class="clock-timer-btn" onclick="resetClockTimer('+t.id+')">&#8635;</button>';
+    }
+    ctrl+='<button class="clock-timer-btn del" onclick="removeClockTimer('+t.id+')">&times;</button>';
+    html+='<div class="'+cls+'"><div class="clock-timer-row1"><span class="clock-timer-name">'+esc(t.name)+'</span><span class="clock-timer-remaining" id="tr-'+t.id+'">'+fmtCountdown(t.remaining)+'</span></div>'
+      +'<div class="clock-timer-row2"><select class="clock-timer-ring-select" onchange="changeTimerRing('+t.id+',this.value)">'+ringOptions(t.ring)+'</select>'
+      +'<div class="clock-timer-controls">'+ctrl+'</div></div></div>';
+  });
+  if(_showNewTimerForm){
+    html+='<div class="clock-new-timer-form">'
+      +'<input id="nt-name" type="text" placeholder="Timer name (optional)" maxlength="24">'
+      +'<input id="nt-dur" type="number" placeholder="Duration in minutes" min="0.1" step="0.5">'
+      +'<select id="nt-ring">'+ringOptions('chime')+'</select>'
+      +'<div class="clock-new-timer-row"><button onclick="cancelNewTimer()">Cancel</button><button class="confirm" onclick="confirmNewTimer()">Add timer</button></div>'
+      +'</div>';
+  }
+  list.innerHTML=html;
+  if(_showNewTimerForm){var el=document.getElementById('nt-name');if(el)setTimeout(function(){el.focus();},40);}
+}
+
+/* ── Clock display ── */
 function updateClockDisplay(){
-  var now=new Date();
-  var h=String(now.getHours()).padStart(2,'0'),m=String(now.getMinutes()).padStart(2,'0'),s=String(now.getSeconds()).padStart(2,'0');
-  var ct=document.getElementById('clock-time');
-  if(ct)ct.innerHTML=h+'<span class="clock-colon">:</span>'+m+'<span class="clock-colon">:</span>'+s;
+  var now=new Date(),h24=now.getHours(),m=now.getMinutes(),s=now.getSeconds();
+  var ct=document.getElementById('clock-time'),ca=document.getElementById('clock-ampm');
+  if(ct){
+    var colon='<span class="clock-colon">:</span>';
+    var ampm='',h=h24;
+    if(_clockFmt==='12'){ampm=h24>=12?'PM':'AM';h=h24%12||12;}
+    ct.innerHTML=String(h).padStart(2,'0')+colon+String(m).padStart(2,'0')+colon+String(s).padStart(2,'0');
+    if(ca)ca.textContent=ampm;
+  }
   var days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   var cd=document.getElementById('clock-date');
   if(cd)cd.textContent=days[now.getDay()]+', '+now.getDate()+' '+months[now.getMonth()]+' '+now.getFullYear();
-  var sec=now.getHours()*3600+now.getMinutes()*60+now.getSeconds();
-  var pct=Math.round(sec/864);
-  var fill=document.getElementById('clock-progress-fill');
-  if(fill)fill.style.width=pct+'%';
-  var cpct=document.getElementById('clock-pct');
-  if(cpct)cpct.textContent=pct+'%';
+  var sec=h24*3600+m*60+s,pct=Math.round(sec/864);
+  var fill=document.getElementById('clock-progress-fill');if(fill)fill.style.width=pct+'%';
+  var cpct=document.getElementById('clock-pct');if(cpct)cpct.textContent=pct+'%';
 }
+
+function toggleClockFmt(){
+  _clockFmt=_clockFmt==='24'?'12':'24';
+  var btn=document.getElementById('clock-fmt-btn');
+  if(btn){btn.textContent=_clockFmt==='12'?'12h':'24h';btn.classList.toggle('active-fmt',_clockFmt==='12');}
+  var ca=document.getElementById('clock-ampm');if(ca&&_clockFmt==='24')ca.textContent='';
+  updateClockDisplay();saveClockPrefs();
+}
+
+function toggleClockPos(){
+  _clockPos=_clockPos==='left'?'right':'left';
+  var pw=document.querySelector('.page-wrap');if(pw)pw.classList.toggle('clock-right',_clockPos==='right');
+  var btn=document.getElementById('clock-pos-btn');
+  if(btn)btn.textContent=_clockPos==='left'?'⇄ Right':'⇄ Left';
+  saveClockPrefs();
+}
+
+function clockPanelHTML(){
+  var fmtLbl=_clockFmt==='12'?'12h':'24h';
+  var posLbl=_clockPos==='left'?'⇄ Right':'⇄ Left';
+  return '<button class="clock-close-btn" onclick="toggleClock()" aria-label="Hide clock">\xd7</button>'
+    +'<div class="clock-settings-row">'
+    +'<button class="clock-settings-btn'+(_clockFmt==='12'?' active-fmt':'')+'" id="clock-fmt-btn" onclick="toggleClockFmt()">'+fmtLbl+'</button>'
+    +'<button class="clock-settings-btn" id="clock-pos-btn" onclick="toggleClockPos()">'+posLbl+'</button>'
+    +'</div>'
+    +'<div class="clock-time-wrap"><div class="clock-time" id="clock-time">00<span class="clock-colon">:</span>00<span class="clock-colon">:</span>00</div><div class="clock-ampm" id="clock-ampm"></div></div>'
+    +'<div class="clock-date" id="clock-date"></div>'
+    +'<div class="clock-progress-wrap"><div class="clock-progress-label"><span>Today</span><span id="clock-pct">0%</span></div><div class="clock-progress-bar"><div class="clock-progress-fill" id="clock-progress-fill" style="width:0%"></div></div></div>'
+    +'<div class="clock-quote">Time doesn\'t stop.</div>'
+    +'<hr class="clock-section-divider">'
+    +'<div class="clock-timers-section"><div class="clock-timers-header"><span>Timers</span><button class="clock-add-timer-btn" onclick="addClockTimer()" aria-label="Add timer">+</button></div><div id="clock-timers-list"></div></div>';
+}
+
 function toggleClock(){
   var pw=document.querySelector('.page-wrap');
   if(_clockMode){
     var col=document.getElementById('page-main-col');
     if(col){while(col.firstChild)pw.insertBefore(col.firstChild,col);col.remove();}
-    var cp=document.getElementById('clock-panel');
-    if(cp)cp.remove();
+    var cp=document.getElementById('clock-panel');if(cp)cp.remove();
     clearInterval(_clockInterval);_clockInterval=null;_clockMode=false;
-    pw.classList.remove('clock-mode');
-    var btn=document.getElementById('clock-toggle-btn');
-    if(btn)btn.setAttribute('aria-pressed','false');
+    pw.classList.remove('clock-mode','clock-right');
+    var btn=document.getElementById('clock-toggle-btn');if(btn)btn.setAttribute('aria-pressed','false');
     try{localStorage.setItem('wt-clock','0');}catch(e){}
   } else {
-    var hdr=pw.querySelector('.page-header');
-    var tabs=pw.querySelector('.folder-tabs');
-    var body=pw.querySelector('.folder-body');
-    var col=document.createElement('div');
-    col.id='page-main-col';col.className='page-main-col';
-    pw.insertBefore(col,hdr);
-    col.appendChild(hdr);col.appendChild(tabs);col.appendChild(body);
-    var cp=document.createElement('div');
-    cp.id='clock-panel';
-    cp.innerHTML=clockPanelHTML();
-    pw.insertBefore(cp,col);
-    pw.classList.add('clock-mode');_clockMode=true;
-    var btn=document.getElementById('clock-toggle-btn');
-    if(btn)btn.setAttribute('aria-pressed','true');
-    updateClockDisplay();
-    _clockInterval=setInterval(updateClockDisplay,1000);
+    loadClockPrefs();
+    var hdr=pw.querySelector('.page-header'),tabs=pw.querySelector('.folder-tabs'),body=pw.querySelector('.folder-body');
+    var col=document.createElement('div');col.id='page-main-col';col.className='page-main-col';
+    pw.insertBefore(col,hdr);col.appendChild(hdr);col.appendChild(tabs);col.appendChild(body);
+    var cp=document.createElement('div');cp.id='clock-panel';cp.innerHTML=clockPanelHTML();
+    pw.insertBefore(cp,col); // always insert before col; CSS order handles right-side
+    pw.classList.add('clock-mode');if(_clockPos==='right')pw.classList.add('clock-right');
+    _clockMode=true;
+    var btn=document.getElementById('clock-toggle-btn');if(btn)btn.setAttribute('aria-pressed','true');
+    updateClockDisplay();renderTimers();
+    _clockInterval=setInterval(updateClockDisplay,1000);ensureTimerTick();
     try{localStorage.setItem('wt-clock','1');}catch(e){}
   }
 }
+
 function initClockMode(){
+  loadClockPrefs();
   try{if(localStorage.getItem('wt-clock')==='1')toggleClock();}catch(e){}
 }
+/* ===== END CLOCK PANEL ===== */
 
 (async function(){
   await loadConfig();

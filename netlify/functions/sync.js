@@ -1,29 +1,12 @@
-const crypto = require('crypto');
-
-function verifyJWT(token, secret) {
-  const parts = token.split('.');
-  if (parts.length !== 3) throw new Error('Invalid token');
-  const msg = parts[0] + '.' + parts[1];
-  const sigB64url = crypto.createHmac('sha256', secret).update(msg).digest('base64url');
-  // Also accept standard base64 with padding stripped (some JWT libs produce this)
-  const sigB64 = crypto.createHmac('sha256', secret).update(msg).digest('base64')
-    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
-  if (sigB64url !== parts[2] && sigB64 !== parts[2]) throw new Error('Invalid signature');
-  const payload = JSON.parse(Buffer.from(parts[1], 'base64url').toString('utf8'));
-  if (payload.exp && Math.floor(Date.now() / 1000) > payload.exp) throw new Error('Token expired');
-  return payload;
-}
-
 exports.handler = async function(event) {
   const SUPABASE_URL = (process.env.SUPABASE_URL || '').trim();
   const SUPABASE_KEY = (process.env.SUPABASE_KEY || '').trim();
-  const JWT_SECRET = (process.env.SUPABASE_JWT_SECRET || '').trim();
 
   if (!SUPABASE_URL || !SUPABASE_KEY) {
     return { statusCode: 500, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ error: 'Supabase env vars not configured' }) };
   }
 
-  const supabaseHeaders = {
+  const serviceHeaders = {
     'Content-Type': 'application/json',
     'apikey': SUPABASE_KEY,
     'Authorization': 'Bearer ' + SUPABASE_KEY
@@ -38,26 +21,33 @@ exports.handler = async function(event) {
     return { statusCode: 204, headers: corsHeaders, body: '' };
   }
 
-  function getUserId() {
-    if (!JWT_SECRET) throw new Error('JWT secret not configured');
+  // Let Supabase verify the user's token — no manual JWT crypto needed
+  async function getUserId() {
     const authHeader = event.headers['authorization'] || event.headers['Authorization'] || '';
     if (!authHeader.startsWith('Bearer ')) throw new Error('Missing authorization header');
     const token = authHeader.slice(7);
-    const payload = verifyJWT(token, JWT_SECRET);
-    if (!payload.sub) throw new Error('No user ID in token');
-    return payload.sub;
+    const r = await fetch(SUPABASE_URL + '/auth/v1/user', {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + token }
+    });
+    if (!r.ok) {
+      const err = await r.json().catch(() => ({}));
+      throw new Error(err.message || err.error_description || 'Unauthorized');
+    }
+    const user = await r.json();
+    if (!user.id) throw new Error('No user ID in response');
+    return user.id;
   }
 
   try {
     if (event.httpMethod === 'GET') {
       let userId;
-      try { userId = getUserId(); } catch(e) {
+      try { userId = await getUserId(); } catch(e) {
         return { statusCode: 401, headers: corsHeaders, body: JSON.stringify({ error: e.message }) };
       }
 
       const r = await fetch(
         SUPABASE_URL + '/rest/v1/task_planner?id=eq.' + encodeURIComponent(userId) + '&select=data,updated_at',
-        { headers: supabaseHeaders }
+        { headers: serviceHeaders }
       );
       const body = await r.text();
       return { statusCode: r.status, headers: corsHeaders, body };
@@ -65,17 +55,17 @@ exports.handler = async function(event) {
 
     if (event.httpMethod === 'POST') {
       let userId;
-      try { userId = getUserId(); } catch(e) {
+      try { userId = await getUserId(); } catch(e) {
         return { statusCode: 401, headers: corsHeaders, body: JSON.stringify({ error: e.message }) };
       }
 
       let bodyObj;
       try { bodyObj = JSON.parse(event.body); } catch(e) { bodyObj = {}; }
-      bodyObj.id = userId; // enforce from verified token — client cannot fake this
+      bodyObj.id = userId; // enforce from verified identity — client cannot fake this
 
       const r = await fetch(SUPABASE_URL + '/rest/v1/task_planner', {
         method: 'POST',
-        headers: Object.assign({ 'Prefer': 'resolution=merge-duplicates' }, supabaseHeaders),
+        headers: Object.assign({ 'Prefer': 'resolution=merge-duplicates' }, serviceHeaders),
         body: JSON.stringify(bodyObj)
       });
       const body = r.status === 204 ? '{}' : await r.text();

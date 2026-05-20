@@ -890,6 +890,55 @@ html[data-theme="glass-light"] .card-low{background:rgba(240,255,243,0.72)!impor
 html[data-theme="glass-dark"] .btn-status{background:rgba(255,255,255,0.08);color:var(--text);border:1px solid rgba(255,255,255,0.15);}
 html[data-theme="glass-light"] .btn-status{background:rgba(0,0,0,0.06);color:var(--text);border:1px solid rgba(0,0,0,0.15);}
 
+/* ===== CLOCK MODE ===== */
+.page-wrap.clock-mode{display:flex;flex-direction:row;align-items:stretch;gap:14px;height:calc(100vh - 32px);max-height:calc(100vh - 32px);overflow:hidden;}
+.page-main-col{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden;}
+.page-main-col .folder-tabs{flex-shrink:0;}
+.page-main-col .folder-body{flex:1;min-height:0;overflow-y:auto;}
+.page-main-col .page-header{flex-shrink:0;}
+
+#clock-panel{
+  width:272px;flex-shrink:0;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;gap:20px;
+  background:rgba(6,4,18,0.92);
+  border-radius:16px;border:1px solid rgba(255,255,255,0.10);
+  backdrop-filter:blur(28px) saturate(140%);-webkit-backdrop-filter:blur(28px) saturate(140%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),0 8px 40px rgba(0,0,0,0.45);
+  padding:32px 24px;position:relative;color:#fff;
+}
+#clock-panel::before{
+  content:'';pointer-events:none;position:absolute;inset:0;border-radius:16px;
+  background:linear-gradient(160deg,rgba(255,255,255,0.07) 0%,transparent 55%);
+}
+.clock-time{
+  font-family:'DM Mono',monospace;font-size:60px;font-weight:400;
+  letter-spacing:-3px;color:#fff;line-height:1;
+  text-shadow:0 0 48px rgba(167,139,250,0.55),0 0 80px rgba(120,100,200,0.25);
+}
+.clock-colon{display:inline-block;animation:clkBlink 1s step-end infinite;opacity:1;}
+@keyframes clkBlink{50%{opacity:0.2;}}
+.clock-date{font-size:11px;color:rgba(255,255,255,0.45);letter-spacing:0.08em;text-transform:uppercase;text-align:center;line-height:1.6;}
+.clock-progress-wrap{width:100%;}
+.clock-progress-label{display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,0.35);margin-bottom:7px;text-transform:uppercase;letter-spacing:0.08em;}
+.clock-progress-bar{height:3px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;}
+.clock-progress-fill{height:100%;background:linear-gradient(90deg,#7c3aed,#a78bfa);border-radius:2px;transition:width 1s linear;}
+.clock-quote{font-size:11px;color:rgba(255,255,255,0.20);font-style:italic;letter-spacing:0.04em;text-align:center;}
+.clock-close-btn{
+  position:absolute;top:10px;right:10px;
+  background:none;border:none;color:rgba(255,255,255,0.30);
+  font-size:16px;cursor:pointer;padding:3px 7px;line-height:1;border-radius:5px;
+  transition:color .15s,background .15s;
+}
+.clock-close-btn:hover{color:rgba(255,255,255,0.80);background:rgba(255,255,255,0.10);}
+#clock-toggle-btn[aria-pressed="true"]{background:rgba(124,58,237,0.18);border-color:rgba(124,58,237,0.5);color:#a78bfa;}
+@media(max-width:768px){
+  .page-wrap.clock-mode{flex-direction:column;height:auto;max-height:none;overflow:visible;}
+  #clock-panel{width:100%;min-height:160px;padding:20px 24px;flex-direction:row;flex-wrap:wrap;justify-content:space-between;gap:10px;}
+  .clock-time{font-size:40px;letter-spacing:-2px;}
+  .clock-progress-wrap,.clock-quote{width:100%;}
+}
+/* ===== END CLOCK MODE ===== */
+
 /* ===== LIQUID GLASS ===== */
 /* Specular highlight on glass themes — the "liquid" shimmer */
 [data-theme="glass-dark"] .folder-body::before,
@@ -1135,6 +1184,7 @@ button svg,.tab-icon svg{display:inline-block;vertical-align:middle;pointer-even
       <button onclick="openFocusSelect()" style="background:#5b21b6;color:#f5f3ff;border-color:#7c3aed;font-weight:500;box-shadow:0 2px 8px rgba(91,33,182,.3);" title="Focus mode" aria-label="Start focus mode"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> <span class="hdr-label">Focus</span></button>
       <button id="sync-btn" onclick="syncNow()" title="Sync data" aria-label="Sync with cloud" style="display:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg> <span class="hdr-label">Sync</span></button>
       <button id="theme-btn" onclick="toggleTheme()" title="Toggle dark mode" aria-label="Toggle light/dark theme"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+      <button id="clock-toggle-btn" onclick="toggleClock()" title="Toggle time clock" aria-label="Toggle clock panel" aria-pressed="false"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 1 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></button>
       <button id="hdr-btn-shortcuts" onclick="showShortcuts()" title="Keyboard shortcuts (press ? anytime)" aria-label="Show keyboard shortcuts" style="font-size:13px;font-weight:700;min-width:28px;">?</button>
     </div>
   </div>
@@ -3589,6 +3639,70 @@ initMusicPlayer();
 updateTitle();
 applyTabSettings();
 
+/* ===== CLOCK PANEL ===== */
+var _clockInterval=null,_clockMode=false;
+function clockPanelHTML(){
+  return '<div class="clock-time" id="clock-time">00<span class="clock-colon">:</span>00<span class="clock-colon">:</span>00</div>'
+    +'<div class="clock-date" id="clock-date"></div>'
+    +'<div class="clock-progress-wrap">'
+    +'<div class="clock-progress-label"><span>Today</span><span id="clock-pct">0%</span></div>'
+    +'<div class="clock-progress-bar"><div class="clock-progress-fill" id="clock-progress-fill" style="width:0%"></div></div>'
+    +'</div>'
+    +'<div class="clock-quote">Time doesn\'t stop.</div>'
+    +'<button class="clock-close-btn" onclick="toggleClock()" aria-label="Hide clock">\xd7</button>';
+}
+function updateClockDisplay(){
+  var now=new Date();
+  var h=String(now.getHours()).padStart(2,'0'),m=String(now.getMinutes()).padStart(2,'0'),s=String(now.getSeconds()).padStart(2,'0');
+  var ct=document.getElementById('clock-time');
+  if(ct)ct.innerHTML=h+'<span class="clock-colon">:</span>'+m+'<span class="clock-colon">:</span>'+s;
+  var days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var cd=document.getElementById('clock-date');
+  if(cd)cd.textContent=days[now.getDay()]+', '+now.getDate()+' '+months[now.getMonth()]+' '+now.getFullYear();
+  var sec=now.getHours()*3600+now.getMinutes()*60+now.getSeconds();
+  var pct=Math.round(sec/864);
+  var fill=document.getElementById('clock-progress-fill');
+  if(fill)fill.style.width=pct+'%';
+  var cpct=document.getElementById('clock-pct');
+  if(cpct)cpct.textContent=pct+'%';
+}
+function toggleClock(){
+  var pw=document.querySelector('.page-wrap');
+  if(_clockMode){
+    var col=document.getElementById('page-main-col');
+    if(col){while(col.firstChild)pw.insertBefore(col.firstChild,col);col.remove();}
+    var cp=document.getElementById('clock-panel');
+    if(cp)cp.remove();
+    clearInterval(_clockInterval);_clockInterval=null;_clockMode=false;
+    pw.classList.remove('clock-mode');
+    var btn=document.getElementById('clock-toggle-btn');
+    if(btn)btn.setAttribute('aria-pressed','false');
+    try{localStorage.setItem('wt-clock','0');}catch(e){}
+  } else {
+    var hdr=pw.querySelector('.page-header');
+    var tabs=pw.querySelector('.folder-tabs');
+    var body=pw.querySelector('.folder-body');
+    var col=document.createElement('div');
+    col.id='page-main-col';col.className='page-main-col';
+    pw.insertBefore(col,hdr);
+    col.appendChild(hdr);col.appendChild(tabs);col.appendChild(body);
+    var cp=document.createElement('div');
+    cp.id='clock-panel';
+    cp.innerHTML=clockPanelHTML();
+    pw.insertBefore(cp,col);
+    pw.classList.add('clock-mode');_clockMode=true;
+    var btn=document.getElementById('clock-toggle-btn');
+    if(btn)btn.setAttribute('aria-pressed','true');
+    updateClockDisplay();
+    _clockInterval=setInterval(updateClockDisplay,1000);
+    try{localStorage.setItem('wt-clock','1');}catch(e){}
+  }
+}
+function initClockMode(){
+  try{if(localStorage.getItem('wt-clock')==='1')toggleClock();}catch(e){}
+}
+
 (async function(){
   await loadConfig();
   loadAuth();
@@ -3597,6 +3711,7 @@ applyTabSettings();
     return;
   }
   afterAuth();
+  initClockMode();
 })();
 </script>
 </body>

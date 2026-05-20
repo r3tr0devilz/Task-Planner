@@ -896,13 +896,12 @@ html[data-theme="glass-light"] .btn-status{background:rgba(0,0,0,0.06);color:var
 .page-main-col .folder-tabs{flex-shrink:0;}
 .page-main-col .folder-body{flex:1;min-height:0;overflow-y:auto;}
 .page-main-col .page-header{flex-shrink:0;}
-/* Right-side position — CSS order flip, no DOM move needed */
 .page-wrap.clock-mode.clock-right #clock-panel{order:2;}
 .page-wrap.clock-mode.clock-right #page-main-col{order:1;}
 
 #clock-panel{
   width:296px;flex-shrink:0;
-  display:flex;flex-direction:column;align-items:center;gap:13px;
+  display:flex;flex-direction:column;align-items:center;
   background:rgba(6,4,18,0.92);
   border-radius:16px;border:1px solid rgba(255,255,255,0.10);
   backdrop-filter:blur(28px) saturate(140%);-webkit-backdrop-filter:blur(28px) saturate(140%);
@@ -916,7 +915,11 @@ html[data-theme="glass-light"] .btn-status{background:rgba(0,0,0,0.06);color:var
   background:linear-gradient(160deg,rgba(255,255,255,0.07) 0%,transparent 55%);
 }
 #clock-panel>*{position:relative;z-index:1;width:100%;}
-
+/* Clock section fills available space and centers content vertically */
+.clock-main-section{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;min-height:200px;
+}
 /* Glass theme adaptation */
 [data-theme="glass-dark"] #clock-panel{
   background:rgba(15,8,42,0.55);border-color:rgba(167,139,250,0.18);
@@ -934,9 +937,6 @@ html[data-theme="glass-light"] .btn-status{background:rgba(0,0,0,0.06);color:var
 [data-theme="glass-light"] .clock-progress-bar{background:rgba(109,40,217,0.10);}
 [data-theme="glass-light"] .clock-close-btn{color:rgba(45,27,105,0.35);}
 [data-theme="glass-light"] .clock-close-btn:hover{color:rgba(45,27,105,0.80);background:rgba(109,40,217,0.08);}
-[data-theme="glass-light"] .clock-settings-btn{color:rgba(45,27,105,0.60);border-color:rgba(45,27,105,0.15);}
-[data-theme="glass-light"] .clock-settings-btn:hover{background:rgba(109,40,217,0.08);color:#2d1b69;}
-[data-theme="glass-light"] .clock-settings-btn.active-fmt{background:rgba(109,40,217,0.15);border-color:rgba(109,40,217,0.40);color:#5b21b6;}
 [data-theme="glass-light"] .clock-section-divider{border-color:rgba(45,27,105,0.10);}
 [data-theme="glass-light"] .clock-timers-header span{color:rgba(45,27,105,0.40);}
 [data-theme="glass-light"] .clock-add-timer-btn{background:rgba(109,40,217,0.12);border-color:rgba(109,40,217,0.30);color:#5b21b6;}
@@ -944,37 +944,28 @@ html[data-theme="glass-light"] .btn-status{background:rgba(0,0,0,0.06);color:var
 [data-theme="glass-light"] .clock-timer-item.running{border-color:rgba(109,40,217,0.35);}
 [data-theme="glass-light"] .clock-timer-name{color:#1e1b4b;}
 [data-theme="glass-light"] .clock-timer-remaining{color:#5b21b6;}
-[data-theme="glass-light"] .clock-timer-ring-select{background:rgba(109,40,217,0.06);border-color:rgba(109,40,217,0.15);color:rgba(45,27,105,0.70);}
 [data-theme="glass-light"] .clock-timer-btn{background:rgba(109,40,217,0.06);border-color:rgba(109,40,217,0.12);color:rgba(45,27,105,0.60);}
 [data-theme="glass-light"] .clock-timer-btn:hover{background:rgba(109,40,217,0.14);color:#2d1b69;}
 [data-theme="glass-light"] .clock-timer-btn.play{background:rgba(109,40,217,0.14);border-color:rgba(109,40,217,0.35);color:#5b21b6;}
 [data-theme="glass-light"] .clock-new-timer-form{background:rgba(109,40,217,0.05);border-color:rgba(109,40,217,0.20);}
-[data-theme="glass-light"] .clock-new-timer-form input,[data-theme="glass-light"] .clock-new-timer-form select{background:rgba(109,40,217,0.06);border-color:rgba(109,40,217,0.15);color:#1e1b4b;}
+[data-theme="glass-light"] .clock-new-timer-form input{background:rgba(109,40,217,0.06);border-color:rgba(109,40,217,0.15);color:#1e1b4b;}
 [data-theme="glass-light"] .clock-new-timer-row button{background:rgba(109,40,217,0.05);border-color:rgba(109,40,217,0.15);color:rgba(45,27,105,0.65);}
-
-/* Clock settings row */
-.clock-settings-row{display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:2px;}
-.clock-settings-btn{
-  flex:1;background:none;border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.48);
-  font-size:10px;font-weight:600;padding:4px 6px;border-radius:7px;cursor:pointer;
-  font-family:inherit;letter-spacing:0.05em;text-transform:uppercase;
-  transition:all .15s;line-height:1.4;white-space:nowrap;
-}
-.clock-settings-btn:hover{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.80);}
-.clock-settings-btn.active-fmt{background:rgba(124,58,237,0.20);border-color:rgba(124,58,237,0.45);color:#a78bfa;}
-
+[data-theme="glass-light"] .clock-numpad-display{color:#2d1b69;background:rgba(109,40,217,0.08);border-color:rgba(109,40,217,0.20);}
+[data-theme="glass-light"] .clock-numpad button{background:rgba(109,40,217,0.08);border-color:rgba(109,40,217,0.15);color:rgba(45,27,105,0.75);}
+[data-theme="glass-light"] .clock-numpad button:hover{background:rgba(109,40,217,0.18);color:#2d1b69;}
+[data-theme="glass-light"] .clock-numpad button.np-back{color:rgba(109,40,217,0.50);}
 /* Time display */
 .clock-time-wrap{display:flex;align-items:baseline;justify-content:center;gap:5px;width:100%;}
 .clock-time{
-  font-family:'DM Mono',monospace;font-size:38px;font-weight:400;
-  letter-spacing:-1px;color:#fff;line-height:1;white-space:nowrap;
-  text-shadow:0 0 40px rgba(167,139,250,0.55),0 0 70px rgba(120,100,200,0.22);
+  font-family:'DM Mono',monospace;font-size:46px;font-weight:400;
+  letter-spacing:-2px;color:#fff;line-height:1;white-space:nowrap;
+  text-shadow:0 0 40px rgba(167,139,250,0.55),0 0 72px rgba(120,100,200,0.22);
 }
 .clock-colon{display:inline-block;animation:clkBlink 1s step-end infinite;}
 @keyframes clkBlink{50%{opacity:0.2;}}
 .clock-ampm{
-  font-family:'DM Mono',monospace;font-size:13px;color:rgba(167,139,250,0.70);
-  letter-spacing:0.05em;line-height:1;align-self:flex-end;padding-bottom:3px;min-width:20px;
+  font-family:'DM Mono',monospace;font-size:14px;color:rgba(167,139,250,0.70);
+  letter-spacing:0.05em;line-height:1;align-self:flex-end;padding-bottom:4px;min-width:22px;
 }
 .clock-date{font-size:10px;color:rgba(255,255,255,0.38);letter-spacing:0.08em;text-transform:uppercase;text-align:center;line-height:1.6;}
 .clock-progress-wrap{width:100%;}
@@ -989,10 +980,9 @@ html[data-theme="glass-light"] .btn-status{background:rgba(0,0,0,0.06);color:var
   transition:color .15s,background .15s;
 }
 .clock-close-btn:hover{color:rgba(255,255,255,0.80);background:rgba(255,255,255,0.10);}
-.clock-section-divider{width:100%;border:none;border-top:1px solid rgba(255,255,255,0.07);margin:1px 0;}
-
+.clock-section-divider{width:100%;border:none;border-top:1px solid rgba(255,255,255,0.07);margin:4px 0 8px;}
 /* Timers */
-.clock-timers-section{width:100%;display:flex;flex-direction:column;gap:7px;}
+.clock-timers-section{width:100%;display:flex;flex-direction:column;gap:7px;flex-shrink:0;}
 .clock-timers-header{display:flex;justify-content:space-between;align-items:center;font-size:10px;color:rgba(255,255,255,0.32);text-transform:uppercase;letter-spacing:0.08em;}
 .clock-add-timer-btn{
   background:rgba(124,58,237,0.18);border:1px solid rgba(124,58,237,0.35);
@@ -1003,7 +993,7 @@ html[data-theme="glass-light"] .btn-status{background:rgba(0,0,0,0.06);color:var
 .clock-add-timer-btn:hover{background:rgba(124,58,237,0.30);}
 .clock-timer-item{
   background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
-  border-radius:9px;padding:9px 10px;display:flex;flex-direction:column;gap:6px;
+  border-radius:9px;padding:9px 10px;display:flex;flex-direction:column;gap:5px;
   transition:border-color .15s;
 }
 .clock-timer-item.running{border-color:rgba(124,58,237,0.40);background:rgba(124,58,237,0.05);}
@@ -1011,14 +1001,7 @@ html[data-theme="glass-light"] .btn-status{background:rgba(0,0,0,0.06);color:var
 .clock-timer-row1{display:flex;justify-content:space-between;align-items:center;gap:6px;}
 .clock-timer-name{font-size:12px;font-weight:600;color:#e2e2ee;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .clock-timer-remaining{font-family:'DM Mono',monospace;font-size:13px;color:#a78bfa;white-space:nowrap;}
-.clock-timer-row2{display:flex;align-items:center;gap:4px;}
-.clock-timer-ring-select{
-  font-size:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.10);
-  color:rgba(255,255,255,0.48);border-radius:5px;padding:3px 5px;cursor:pointer;font-family:inherit;
-  flex:1;min-width:0;outline:none;
-}
-.clock-timer-ring-select:focus{border-color:rgba(124,58,237,0.45);}
-.clock-timer-controls{display:flex;gap:3px;flex-shrink:0;}
+.clock-timer-controls{display:flex;justify-content:flex-end;gap:3px;}
 .clock-timer-btn{
   background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.10);
   color:rgba(255,255,255,0.55);font-size:11px;padding:3px 7px;border-radius:5px;
@@ -1029,31 +1012,49 @@ html[data-theme="glass-light"] .btn-status{background:rgba(0,0,0,0.06);color:var
 .clock-timer-btn.play:hover{background:rgba(124,58,237,0.30);}
 .clock-timer-btn.del{color:rgba(239,68,68,0.45);}
 .clock-timer-btn.del:hover{background:rgba(239,68,68,0.10);border-color:rgba(239,68,68,0.25);color:#f87171;}
+/* New timer form — Android numpad style */
 .clock-new-timer-form{
   background:rgba(255,255,255,0.03);border:1px solid rgba(124,58,237,0.22);
-  border-radius:9px;padding:10px;display:flex;flex-direction:column;gap:6px;
+  border-radius:9px;padding:10px;display:flex;flex-direction:column;gap:8px;
 }
-.clock-new-timer-form input,.clock-new-timer-form select{
+.clock-new-timer-form input{
   width:100%;box-sizing:border-box;padding:6px 8px;font-size:12px;font-family:inherit;
   background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);
   color:#e2e2ee;border-radius:6px;outline:none;transition:border-color .15s;
 }
-.clock-new-timer-form input:focus,.clock-new-timer-form select:focus{border-color:rgba(124,58,237,0.50);}
+.clock-new-timer-form input:focus{border-color:rgba(124,58,237,0.50);}
+.clock-numpad-display{
+  font-family:'DM Mono',monospace;font-size:28px;font-weight:400;letter-spacing:3px;
+  text-align:center;color:#fff;background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.10);border-radius:8px;padding:10px 0;line-height:1;
+}
+@keyframes npShake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+.clock-numpad-display.shake{animation:npShake 0.3s ease;}
+.clock-numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;}
+.clock-numpad button{
+  background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.10);
+  color:rgba(255,255,255,0.80);font-size:17px;font-weight:500;padding:11px 0;border-radius:8px;
+  cursor:pointer;font-family:'DM Mono',monospace;transition:all .12s;line-height:1;
+}
+.clock-numpad button:hover{background:rgba(255,255,255,0.14);color:#fff;}
+.clock-numpad button:active{background:rgba(124,58,237,0.28);border-color:rgba(124,58,237,0.50);transform:scale(0.94);}
+.clock-numpad button.np-back{font-family:inherit;font-size:14px;color:rgba(255,255,255,0.42);}
+.clock-numpad button.np-back:hover{color:rgba(255,255,255,0.80);}
 .clock-new-timer-row{display:flex;gap:5px;}
 .clock-new-timer-row button{
-  flex:1;font-size:11px;padding:5px 0;border-radius:6px;
+  flex:1;font-size:11px;padding:7px 0;border-radius:6px;
   border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);
   color:rgba(255,255,255,0.55);cursor:pointer;font-family:inherit;transition:all .15s;
 }
 .clock-new-timer-row button:hover{background:rgba(255,255,255,0.10);}
 .clock-new-timer-row button.confirm{background:rgba(124,58,237,0.20);border-color:rgba(124,58,237,0.45);color:#a78bfa;}
 .clock-new-timer-row button.confirm:hover{background:rgba(124,58,237,0.35);}
-
 #clock-toggle-btn[aria-pressed="true"]{background:rgba(124,58,237,0.18);border-color:rgba(124,58,237,0.5);color:#a78bfa;}
 @media(max-width:768px){
   .page-wrap.clock-mode,.page-wrap.clock-mode.clock-right{flex-direction:column;height:auto;max-height:none;overflow:visible;}
   #clock-panel{width:100%;padding:18px 20px;}
-  .clock-time{font-size:48px;}
+  .clock-main-section{min-height:140px;}
+  .clock-time{font-size:44px;}
 }
 /* ===== END CLOCK MODE ===== */
 
@@ -3135,6 +3136,29 @@ function renderSettings(){
   }
 
   if(_settingsTab==='timer'){
+    var _ss='padding:5px 10px;border:1px solid var(--border-md);border-radius:var(--r);background:var(--surface2);color:var(--text);font-size:12px;font-family:inherit;';
+    h+='<div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:14px;">Clock Panel</div>';
+    h+='<div style="display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);">'
+    +'<div style="flex:1;"><div style="font-size:13px;font-weight:500;margin-bottom:3px;">Time format</div><div style="font-size:12px;color:var(--muted);">12-hour or 24-hour clock display.</div></div>'
+    +'<select onchange="clockSetFmt(this.value);" style="'+_ss+'">'
+    +'<option value="24"'+(_clockFmt==='24'?' selected':'')+'>24-hour</option>'
+    +'<option value="12"'+(_clockFmt==='12'?' selected':'')+'>12-hour (AM/PM)</option>'
+    +'</select></div>';
+    h+='<div style="display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);">'
+    +'<div style="flex:1;"><div style="font-size:13px;font-weight:500;margin-bottom:3px;">Panel side</div><div style="font-size:12px;color:var(--muted);">Show the clock panel on the left or right.</div></div>'
+    +'<select onchange="setClockPos(this.value);" style="'+_ss+'">'
+    +'<option value="left"'+(_clockPos==='left'?' selected':'')+'>Left</option>'
+    +'<option value="right"'+(_clockPos==='right'?' selected':'')+'>Right</option>'
+    +'</select></div>';
+    h+='<div style="display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);">'
+    +'<div style="flex:1;"><div style="font-size:13px;font-weight:500;margin-bottom:3px;">Timer ring</div><div style="font-size:12px;color:var(--muted);">Sound played when any timer ends.</div></div>'
+    +'<div style="display:flex;gap:6px;align-items:center;">'
+    +'<select onchange="_clockRing=this.value;saveClockPrefs();" style="'+_ss+'">'
+    +RINGS.map(function(r){return '<option value="'+r[0]+'"'+(_clockRing===r[0]?' selected':'')+'>'+r[1]+'</option>';}).join('')
+    +'</select>'
+    +'<button onclick="playRingtone(_clockRing);" style="padding:5px 10px;border-radius:var(--r);border:1px solid var(--border-md);background:var(--surface2);color:var(--text);font-size:11px;cursor:pointer;font-family:inherit;white-space:nowrap;">&#9654; Preview</button>'
+    +'</div></div>';
+    h+='<div style="height:20px;"></div>';
     h+='<div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:14px;">Pomodoro</div>';
     h+=makePomoSettings();
     h+='<div style="height:20px;"></div>';
@@ -3758,13 +3782,15 @@ updateTitle();
 applyTabSettings();
 
 /* ===== CLOCK PANEL ===== */
-var _clockInterval=null,_clockMode=false,_clockFmt='24',_clockPos='left';
-var _timers=[],_timerInterval=null,_showNewTimerForm=false;
+var _clockInterval=null,_clockMode=false,_clockFmt='24',_clockPos='left',_clockRing='chime';
+var _timers=[],_timerInterval=null,_showNewTimerForm=false,_numpadDigits='000000';
+var RINGS=[['chime','Chime'],['bell','Bell'],['digital','Digital'],['alarm','Alarm'],['pomodoro','Pomodoro'],['none','Silent']];
 
 function loadClockPrefs(){
   try{
     _clockFmt=localStorage.getItem('wt-clock-fmt')||'24';
     _clockPos=localStorage.getItem('wt-clock-pos')||'left';
+    _clockRing=localStorage.getItem('wt-clock-ring')||'chime';
     var saved=localStorage.getItem('wt-clock-timers');
     _timers=saved?JSON.parse(saved):[];
     _timers.forEach(function(t){t.running=false;t.fired=false;});
@@ -3774,12 +3800,13 @@ function saveClockPrefs(){
   try{
     localStorage.setItem('wt-clock-fmt',_clockFmt);
     localStorage.setItem('wt-clock-pos',_clockPos);
-    var toSave=_timers.map(function(t){return {id:t.id,name:t.name,duration:t.duration,remaining:t.remaining,ring:t.ring,running:false,fired:false};});
+    localStorage.setItem('wt-clock-ring',_clockRing);
+    var toSave=_timers.map(function(t){return {id:t.id,name:t.name,duration:t.duration,remaining:t.remaining,running:false,fired:false};});
     localStorage.setItem('wt-clock-timers',JSON.stringify(toSave));
   }catch(e){}
 }
 
-/* ── Ringtones (Web Audio API, no files needed) ── */
+/* ── Ringtones ── */
 function playRingtone(type){
   try{
     var ctx=new(window.AudioContext||window.webkitAudioContext)();
@@ -3801,21 +3828,37 @@ function playRingtone(type){
   }catch(e){}
 }
 
-/* ── Timer helpers ── */
+/* ── Numpad ── */
+function numpadPress(d){
+  if(d==='back'){_numpadDigits='0'+_numpadDigits.slice(0,5);}
+  else if(d==='00'){_numpadDigits=_numpadDigits.slice(2)+'00';}
+  else{_numpadDigits=_numpadDigits.slice(1)+String(d);}
+  var disp=document.getElementById('clock-numpad-display');
+  if(disp)disp.textContent=_numpadDigits.slice(0,2)+':'+_numpadDigits.slice(2,4)+':'+_numpadDigits.slice(4,6);
+}
+
+/* ── Timers ── */
 function fmtCountdown(sec){
   var h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;
   if(h>0)return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
   return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
 }
-function addClockTimer(){_showNewTimerForm=true;renderTimers();}
+function addClockTimer(){_numpadDigits='000000';_showNewTimerForm=true;renderTimers();}
 function cancelNewTimer(){_showNewTimerForm=false;renderTimers();}
 function confirmNewTimer(){
-  var nameEl=document.getElementById('nt-name'),durEl=document.getElementById('nt-dur'),ringEl=document.getElementById('nt-ring');
-  if(!durEl)return;
-  var mins=parseFloat(durEl.value)||0;
-  if(mins<=0){durEl.focus();return;}
-  _timers.push({id:Date.now(),name:(nameEl&&nameEl.value.trim())||'Timer',duration:Math.round(mins*60),remaining:Math.round(mins*60),running:false,fired:false,ring:(ringEl&&ringEl.value)||'chime'});
-  _showNewTimerForm=false;saveClockPrefs();renderTimers();ensureTimerTick();
+  var h=parseInt(_numpadDigits.slice(0,2))||0;
+  var m=parseInt(_numpadDigits.slice(2,4))||0;
+  var s=parseInt(_numpadDigits.slice(4,6))||0;
+  var total=h*3600+m*60+s;
+  if(total<=0){
+    var d=document.getElementById('clock-numpad-display');
+    if(d){d.classList.add('shake');setTimeout(function(){if(d)d.classList.remove('shake');},350);}
+    return;
+  }
+  var nameEl=document.getElementById('nt-name');
+  _timers.push({id:Date.now(),name:(nameEl&&nameEl.value.trim())||'Timer',duration:total,remaining:total,running:false,fired:false});
+  _showNewTimerForm=false;_numpadDigits='000000';
+  saveClockPrefs();renderTimers();ensureTimerTick();
 }
 function removeClockTimer(id){_timers=_timers.filter(function(t){return t.id!==id;});saveClockPrefs();renderTimers();}
 function startClockTimer(id){
@@ -3825,9 +3868,9 @@ function startClockTimer(id){
 }
 function pauseClockTimer(id){var t=_timers.find(function(x){return x.id===id;});if(t){t.running=false;renderTimers();}}
 function resetClockTimer(id){var t=_timers.find(function(x){return x.id===id;});if(!t)return;t.remaining=t.duration;t.running=false;t.fired=false;saveClockPrefs();renderTimers();}
-function changeTimerRing(id,val){var t=_timers.find(function(x){return x.id===id;});if(t){t.ring=val;saveClockPrefs();}}
 function ensureTimerTick(){
-  if(!_timerInterval&&_timers.some(function(t){return t.running;}))_timerInterval=setInterval(tickTimers,1000);
+  if(!_timerInterval&&_timers.some(function(t){return t.running;}))
+    _timerInterval=setInterval(tickTimers,1000);
 }
 function tickTimers(){
   var anyRunning=false;
@@ -3835,7 +3878,9 @@ function tickTimers(){
     if(!t.running)return;
     t.remaining=Math.max(0,t.remaining-1);
     if(t.remaining===0){
-      t.running=false;if(!t.fired){t.fired=true;playRingtone(t.ring);}renderTimers();
+      t.running=false;
+      if(!t.fired){t.fired=true;playRingtone(_clockRing);}
+      renderTimers();
     } else {
       anyRunning=true;
       var el=document.getElementById('tr-'+t.id);if(el)el.textContent=fmtCountdown(t.remaining);
@@ -3843,10 +3888,6 @@ function tickTimers(){
   });
   if(!anyRunning){clearInterval(_timerInterval);_timerInterval=null;saveClockPrefs();}
 }
-
-var RINGS=[['chime','Chime'],['bell','Bell'],['digital','Digital'],['alarm','Alarm'],['pomodoro','Pomodoro'],['none','Silent']];
-function ringOptions(sel){return RINGS.map(function(r){return '<option value="'+r[0]+'"'+(sel===r[0]?' selected':'')+'>'+r[1]+'</option>';}).join('');}
-
 function renderTimers(){
   var list=document.getElementById('clock-timers-list');if(!list)return;
   var html='';
@@ -3860,16 +3901,23 @@ function renderTimers(){
       if(t.remaining!==t.duration)ctrl+='<button class="clock-timer-btn" onclick="resetClockTimer('+t.id+')">&#8635;</button>';
     }
     ctrl+='<button class="clock-timer-btn del" onclick="removeClockTimer('+t.id+')">&times;</button>';
-    html+='<div class="'+cls+'"><div class="clock-timer-row1"><span class="clock-timer-name">'+esc(t.name)+'</span><span class="clock-timer-remaining" id="tr-'+t.id+'">'+fmtCountdown(t.remaining)+'</span></div>'
-      +'<div class="clock-timer-row2"><select class="clock-timer-ring-select" onchange="changeTimerRing('+t.id+',this.value)">'+ringOptions(t.ring)+'</select>'
-      +'<div class="clock-timer-controls">'+ctrl+'</div></div></div>';
+    html+='<div class="'+cls+'">'
+      +'<div class="clock-timer-row1"><span class="clock-timer-name">'+esc(t.name)+'</span><span class="clock-timer-remaining" id="tr-'+t.id+'">'+fmtCountdown(t.remaining)+'</span></div>'
+      +'<div class="clock-timer-controls">'+ctrl+'</div>'
+      +'</div>';
   });
   if(_showNewTimerForm){
+    var disp=_numpadDigits.slice(0,2)+':'+_numpadDigits.slice(2,4)+':'+_numpadDigits.slice(4,6);
     html+='<div class="clock-new-timer-form">'
       +'<input id="nt-name" type="text" placeholder="Timer name (optional)" maxlength="24">'
-      +'<input id="nt-dur" type="number" placeholder="Duration in minutes" min="0.1" step="0.5">'
-      +'<select id="nt-ring">'+ringOptions('chime')+'</select>'
-      +'<div class="clock-new-timer-row"><button onclick="cancelNewTimer()">Cancel</button><button class="confirm" onclick="confirmNewTimer()">Add timer</button></div>'
+      +'<div class="clock-numpad-display" id="clock-numpad-display">'+disp+'</div>'
+      +'<div class="clock-numpad">'
+      +'<button onclick="numpadPress(7)">7</button><button onclick="numpadPress(8)">8</button><button onclick="numpadPress(9)">9</button>'
+      +'<button onclick="numpadPress(4)">4</button><button onclick="numpadPress(5)">5</button><button onclick="numpadPress(6)">6</button>'
+      +'<button onclick="numpadPress(1)">1</button><button onclick="numpadPress(2)">2</button><button onclick="numpadPress(3)">3</button>'
+      +'<button onclick="numpadPress(\'00\')">00</button><button onclick="numpadPress(0)">0</button><button class="np-back" onclick="numpadPress(\'back\')">&#9003;</button>'
+      +'</div>'
+      +'<div class="clock-new-timer-row"><button onclick="cancelNewTimer()">Cancel</button><button class="confirm" onclick="confirmNewTimer()">Add</button></div>'
       +'</div>';
   }
   list.innerHTML=html;
@@ -3881,8 +3929,7 @@ function updateClockDisplay(){
   var now=new Date(),h24=now.getHours(),m=now.getMinutes(),s=now.getSeconds();
   var ct=document.getElementById('clock-time'),ca=document.getElementById('clock-ampm');
   if(ct){
-    var colon='<span class="clock-colon">:</span>';
-    var ampm='',h=h24;
+    var colon='<span class="clock-colon">:</span>',ampm='',h=h24;
     if(_clockFmt==='12'){ampm=h24>=12?'PM':'AM';h=h24%12||12;}
     ct.innerHTML=String(h).padStart(2,'0')+colon+String(m).padStart(2,'0')+colon+String(s).padStart(2,'0');
     if(ca)ca.textContent=ampm;
@@ -3896,34 +3943,17 @@ function updateClockDisplay(){
   var cpct=document.getElementById('clock-pct');if(cpct)cpct.textContent=pct+'%';
 }
 
-function toggleClockFmt(){
-  _clockFmt=_clockFmt==='24'?'12':'24';
-  var btn=document.getElementById('clock-fmt-btn');
-  if(btn){btn.textContent=_clockFmt==='12'?'12h':'24h';btn.classList.toggle('active-fmt',_clockFmt==='12');}
-  var ca=document.getElementById('clock-ampm');if(ca&&_clockFmt==='24')ca.textContent='';
-  updateClockDisplay();saveClockPrefs();
-}
-
-function toggleClockPos(){
-  _clockPos=_clockPos==='left'?'right':'left';
-  var pw=document.querySelector('.page-wrap');if(pw)pw.classList.toggle('clock-right',_clockPos==='right');
-  var btn=document.getElementById('clock-pos-btn');
-  if(btn)btn.textContent=_clockPos==='left'?'⇄ Right':'⇄ Left';
-  saveClockPrefs();
-}
+function clockSetFmt(val){_clockFmt=val;var ca=document.getElementById('clock-ampm');if(ca&&val==='24')ca.textContent='';updateClockDisplay();saveClockPrefs();}
+function setClockPos(val){_clockPos=val;var pw=document.querySelector('.page-wrap');if(pw)pw.classList.toggle('clock-right',val==='right');saveClockPrefs();}
 
 function clockPanelHTML(){
-  var fmtLbl=_clockFmt==='12'?'12h':'24h';
-  var posLbl=_clockPos==='left'?'⇄ Right':'⇄ Left';
   return '<button class="clock-close-btn" onclick="toggleClock()" aria-label="Hide clock">\xd7</button>'
-    +'<div class="clock-settings-row">'
-    +'<button class="clock-settings-btn'+(_clockFmt==='12'?' active-fmt':'')+'" id="clock-fmt-btn" onclick="toggleClockFmt()">'+fmtLbl+'</button>'
-    +'<button class="clock-settings-btn" id="clock-pos-btn" onclick="toggleClockPos()">'+posLbl+'</button>'
-    +'</div>'
+    +'<div class="clock-main-section">'
     +'<div class="clock-time-wrap"><div class="clock-time" id="clock-time">00<span class="clock-colon">:</span>00<span class="clock-colon">:</span>00</div><div class="clock-ampm" id="clock-ampm"></div></div>'
     +'<div class="clock-date" id="clock-date"></div>'
     +'<div class="clock-progress-wrap"><div class="clock-progress-label"><span>Today</span><span id="clock-pct">0%</span></div><div class="clock-progress-bar"><div class="clock-progress-fill" id="clock-progress-fill" style="width:0%"></div></div></div>'
     +'<div class="clock-quote">Time doesn\'t stop.</div>'
+    +'</div>'
     +'<hr class="clock-section-divider">'
     +'<div class="clock-timers-section"><div class="clock-timers-header"><span>Timers</span><button class="clock-add-timer-btn" onclick="addClockTimer()" aria-label="Add timer">+</button></div><div id="clock-timers-list"></div></div>';
 }
@@ -3944,7 +3974,7 @@ function toggleClock(){
     var col=document.createElement('div');col.id='page-main-col';col.className='page-main-col';
     pw.insertBefore(col,hdr);col.appendChild(hdr);col.appendChild(tabs);col.appendChild(body);
     var cp=document.createElement('div');cp.id='clock-panel';cp.innerHTML=clockPanelHTML();
-    pw.insertBefore(cp,col); // always insert before col; CSS order handles right-side
+    pw.insertBefore(cp,col);
     pw.classList.add('clock-mode');if(_clockPos==='right')pw.classList.add('clock-right');
     _clockMode=true;
     var btn=document.getElementById('clock-toggle-btn');if(btn)btn.setAttribute('aria-pressed','true');

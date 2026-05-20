@@ -3900,7 +3900,7 @@ function renderTimers(){
       ctrl='<button class="clock-timer-btn play" onclick="startClockTimer('+t.id+')">&#9654;</button>';
       if(t.remaining!==t.duration)ctrl+='<button class="clock-timer-btn" onclick="resetClockTimer('+t.id+')">&#8635;</button>';
     }
-    ctrl+='<button class="clock-timer-btn del" onclick="removeClockTimer('+t.id+')">&times;</button>';
+    ctrl+='<button class="clock-timer-btn del" onclick="removeClockTimer('+t.id+')" aria-label="Delete"><svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="1" y1="1" x2="8" y2="8"/><line x1="8" y1="1" x2="1" y2="8"/></svg></button>';
     html+='<div class="'+cls+'">'
       +'<div class="clock-timer-row1"><span class="clock-timer-name">'+esc(t.name)+'</span><span class="clock-timer-remaining" id="tr-'+t.id+'">'+fmtCountdown(t.remaining)+'</span></div>'
       +'<div class="clock-timer-controls">'+ctrl+'</div>'

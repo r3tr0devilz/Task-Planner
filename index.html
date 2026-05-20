@@ -1087,13 +1087,15 @@ html[data-theme="glass-light"] .btn-status{background:rgba(0,0,0,0.06);color:var
 }
 
 /* Clock mode: override glass-theme overflow:hidden so folder-body can scroll */
-.page-wrap.clock-mode .folder-body{min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;scrollbar-width:thin;scrollbar-color:var(--border-md) transparent;}
+.page-wrap.clock-mode .folder-body{min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;padding-right:6px;scrollbar-width:thin;scrollbar-color:var(--border-md) transparent;}
 .page-wrap.clock-mode .folder-body::-webkit-scrollbar{width:4px;}
-.page-wrap.clock-mode .folder-body::-webkit-scrollbar-track{background:transparent;}
+.page-wrap.clock-mode .folder-body::-webkit-scrollbar-track{background:rgba(0,0,0,0.06);border-radius:2px;margin:6px 0;}
 .page-wrap.clock-mode .folder-body::-webkit-scrollbar-thumb{background:var(--border-md);border-radius:2px;}
-/* Pills row: inline flex-wrap:wrap can't be beaten without !important */
-.page-wrap.clock-mode .folder-toolbar>div:last-child{flex-wrap:nowrap!important;overflow-x:auto;scrollbar-width:none;}
-.page-wrap.clock-mode .folder-toolbar>div:last-child::-webkit-scrollbar{display:none;}
+/* Pills row: show thin scrollbar so all pills reachable */
+.page-wrap.clock-mode .folder-toolbar>div:last-child{flex-wrap:nowrap!important;overflow-x:auto;scrollbar-width:thin;scrollbar-color:var(--border-md) transparent;}
+.page-wrap.clock-mode .folder-toolbar>div:last-child::-webkit-scrollbar{height:3px;}
+.page-wrap.clock-mode .folder-toolbar>div:last-child::-webkit-scrollbar-track{background:transparent;}
+.page-wrap.clock-mode .folder-toolbar>div:last-child::-webkit-scrollbar-thumb{background:var(--border-md);border-radius:2px;}
 /* Glass card shimmer */
 [data-theme="glass-dark"] .card,[data-theme="glass-dark"] .kanban-card{
   background:rgba(20,14,48,0.58)!important;

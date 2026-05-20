@@ -918,7 +918,7 @@ html[data-theme="glass-light"] .btn-status{background:rgba(0,0,0,0.06);color:var
   content:'';pointer-events:none;position:absolute;inset:0;border-radius:16px;z-index:0;
   background:linear-gradient(160deg,rgba(255,255,255,0.07) 0%,transparent 55%);
 }
-#clock-panel>*{position:relative;z-index:1;width:100%;}
+#clock-panel>*:not(.clock-close-btn){position:relative;z-index:1;width:100%;}
 /* Clock section fills available space and centers content vertically */
 .clock-main-section{
   flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -979,7 +979,6 @@ html[data-theme="glass-light"] .btn-status{background:rgba(0,0,0,0.06);color:var
 .clock-quote{font-size:10px;color:rgba(255,255,255,0.18);font-style:italic;letter-spacing:0.04em;text-align:center;line-height:1.6;}
 .clock-close-btn{
   position:absolute;top:10px;right:10px;z-index:2;
-  width:auto;
   background:none;border:none;color:rgba(255,255,255,0.28);
   font-size:16px;cursor:pointer;padding:3px 7px;line-height:1;border-radius:5px;
   transition:color .15s,background .15s;
